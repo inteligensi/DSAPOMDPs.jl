@@ -25,10 +25,22 @@ end
 
 policy = DSAPolicy(policy=RandomPolicy(P), p_nothing=0.1)
 up = NothingUpdater()
+dsaup = DSABeliefUpdater(P)
 
 for (s, a, r, sp) in stepthrough(P, policy, up, b0, s0, "s,a,r,sp", max_steps=10)
    @show s, a, r, sp
 end
+
+s = deepcopy(s0)
+b = deepcopy(b0)
+b1 = initialize_belief(dsaup)
+
+a = action(policy, b)
+(s, o, r) = gen(P, s, a, rng)
+b = update(up, b, a, o)
+b1_p = update(dsaup, b1, a, o)
+
+
 
 
 # a = action(policy, b0)

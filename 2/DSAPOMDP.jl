@@ -125,7 +125,7 @@ struct DSABeliefUpdater <: Updater
     P::DSAPOMDP
 end
 
-function POMDPs.initialize_belief(up::DSABeliefUpdater, s::State)
+function POMDPs.initialize_belief(up::DSABeliefUpdater)
     belief_dict = Dict{State, Float64}()
     total_states = 2^5 * (up.P.max_duration + 1)
     for ane in [true, false], avm in [true, false], occ in [true, false], time in 0:up.P.max_duration, hypertension in [true, false]
@@ -135,10 +135,10 @@ function POMDPs.initialize_belief(up::DSABeliefUpdater, s::State)
     return Belief(belief_dict)
 end
 
-function POMDPs.update(up::DSABeliefUpdater, b::Belief, a::Action, o::Observation, P::DSAPOMDP)
+function POMDPs.update(up::DSABeliefUpdater, b::Belief, a::Action, o::Observation)
     new_belief_dict = Dict{State, Float64}()
     for (state, prob) in b.belief
-        p_o_given_sa = pdf(observation(P, state), o)
+        p_o_given_sa = pdf(observation(up.P, state), o)
         new_belief_dict[state] = prob * p_o_given_sa
     end
     total = sum(values(new_belief_dict))
@@ -164,6 +164,7 @@ function POMDPs.gen(P::DSAPOMDP, s::State, a::Action, rng::AbstractRNG)
     next_state = rand(rng, transition(P, s, a))
     sp = State(ane=next_state[1], avm=next_state[2], occ=next_state[3], time=next_state[4], hypertension=next_state[5])
     obs = rand(rng, observation(P, s))
+    observation = Observation(is_ane=obs[1], is_avm=obs[2], is_occ=obs[3])
     rew = reward(P, s, a)
-    return (sp = sp, o = obs, r = rew)
+    return (sp = sp, o = observation, r = rew)
 end
