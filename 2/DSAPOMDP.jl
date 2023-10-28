@@ -137,13 +137,14 @@ end
 
 function POMDPs.update(up::DSABeliefUpdater, b::Belief, a::Action, o::Observation)
     new_belief_dict = Dict{State, Float64}()
-    for (state, prob) in b.belief
-        p_o_given_sa = pdf(observation(up.P, state), o)
-        new_belief_dict[state] = prob * p_o_given_sa
+    for (state, belief_prob) in b.belief
+        updated_belief_prob = rand()
+        
+        new_belief_dict[state] = updated_belief_prob * belief_prob
     end
-    total = sum(values(new_belief_dict))
-    for state in keys(new_belief_dict)
-        new_belief_dict[state] /= total
+    total_probability = sum(values(new_belief_dict))
+    for (state, belief_prob) in new_belief_dict
+        new_belief_dict[state] = belief_prob / total_probability
     end
     return Belief(new_belief_dict)
 end
@@ -164,7 +165,7 @@ function POMDPs.gen(P::DSAPOMDP, s::State, a::Action, rng::AbstractRNG)
     next_state = rand(rng, transition(P, s, a))
     sp = State(ane=next_state[1], avm=next_state[2], occ=next_state[3], time=next_state[4], hypertension=next_state[5])
     obs = rand(rng, observation(P, s))
-    observation = Observation(is_ane=obs[1], is_avm=obs[2], is_occ=obs[3])
+    observ= Observation(is_ane=obs[1], is_avm=obs[2], is_occ=obs[3])
     rew = reward(P, s, a)
-    return (sp = sp, o = observation, r = rew)
+    return (sp = sp, o = observ, r = rew)
 end
