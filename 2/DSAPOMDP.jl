@@ -162,10 +162,18 @@ end
 # function POMDPs.action(P::DSAPOMDP, x:Any)
 
 function POMDPs.gen(P::DSAPOMDP, s::State, a::Action, rng::AbstractRNG)
-    next_state = rand(rng, transition(P, s, a))
-    sp = State(ane=next_state[1], avm=next_state[2], occ=next_state[3], time=next_state[4], hypertension=next_state[5])
+    if isterminal(P, s) || s.time >= (P.max_duration - 1) || (s.ane && s.avm && s.occ)
+        sp = s
+    else
+        next_state = rand(rng, transition(P, s, a))
+        sp = State(ane=next_state[1], avm=next_state[2], occ=next_state[3], time=next_state[4], hypertension=next_state[5])
+    end
     obs = rand(rng, observation(P, s))
     observ= Observation(is_ane=obs[1], is_avm=obs[2], is_occ=obs[3])
     rew = reward(P, s, a)
     return (sp = sp, o = observ, r = rew)
+end
+
+function Base.rand(rng::AbstractRNG, b::Belief)
+    return rand(rng, b.belief)
 end
