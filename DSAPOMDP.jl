@@ -1,126 +1,195 @@
 using POMDPs
 using POMDPModelTools
-using Distributions
 using Parameters
+using Random
+using Distributions
+
+export State, Action, Observation, Belief, DSAPOMDP, DSABeliefUpdater
 
 @with_kw mutable struct State
-    avm::Bool = false # AVM
-    ane::Bool = false # Aneurysm
-    occ::Bool = false # Occlusion can happen if AVM or Aneurysm or other factors (hypertension, vascular damage, etc.)
-    have_surgery::Bool = false # Have surgery
-    have_MRA::Bool = false # Have MRA
-    nihss::Int64 = 0 # NIHSS
-    onset::Int64 = 0 # Onset
-    t::Int64 = 0 # Time
+    ane::Bool = false
+    avm::Bool = false
+    occ::Bool = false
+    time::Int64 = 0
     hypertension::Bool = false
 end
 
+@enum Action TREAT OBSERVE WAIT
 
-# avm
-# P(avm|congenital) = 0.9
-# P(~avm|congenital) = 0.1
-# P(congenital) = 0.001
-# P(avm) = 0.009
+@with_kw mutable struct Observation
+    is_ane::Bool
+    is_avm::Bool
+    is_occ::Bool
+end
 
-#how does occlusion probability is affected by AVM or Aneurysm, or other factors
-# P(occ) = P(occ|avm)P(avm) + P(occ|ane)P(ane|hypertension)P(hypertension) + P(occ|other)P(other)
+@with_kw mutable struct Belief
+    belief::Dict{State, Float64} = Dict{State, Float64}()
+end
 
-# P(occ|avm) = 0.8
-# P(~occ|avm) = 0.2
-
-# P(occ|ane) = 0.1
-# P(~occ|ane) = 0.9
-
-# P(ane|hypertension) = 0.1
-# P(~ane|hypertension) = 0.9
-# P(ane|~hypertension) = 0.01
-# P(~ane|~hypertension) = 0.99
-# P(hypertension) = 0.7
-# P(~hypertension) = 0.3
-# P(ane) = 0.07
-
-# P(occ|other) = 0.8
-# P(~occ|other) = 0.2
-# P(other) = 0.7
-
-# calculate P(occ)
-# P(occ) = P(occ|avm)P(avm) + P(occ|ane)P(ane|hypertension)P(hypertension) + P(occ|other)P(other)
-# P(occ) = 0.8*0.009 + 0.07 + 0.8*0.7 = 0.053
-
-
-@enum Action DSA MRA OBSERVE SURGERY COIL EMBOLIZATION WAIT
-
-@with_kw mutable struct DSAPOMDP
-    # POMDP Parameters
-    discount_factor::Float64 = 0.95
-    max_nihss::Int64 = 42
-    max_duration::Int64 = 24 #months
-    p_avm::Float64 = 0.02    
+@with_kw mutable struct DSAPOMDP <: POMDP{State, Action, Observation}
+    p_avm::Float64 = 0.02
     p_ane::Float64 = 0.05
     p_occ::Float64 = 0.1
+    max_duration::Int64 = 24
+    discount::Float64 = 0.95
     null_state::State = State(
-        avm=true, ane=true, occ=true, 
-        have_surgery=true, have_MRA=true, 
-        nihss=-1, onset=-1, t=-1, hypertension=true
-        )
+        ane = true,
+        avm = true,
+        occ = true,
+        time = -1,
+        hypertension = true
+    )
 end
 
 function POMDPs.states(P::DSAPOMDP)
-    states = [State(avm, ane, occ, have_surgery, 
-        have_MRA, nihss, onset, t, hypertension) 
-        for avm in [true, false], 
-            ane in [true, false], 
-            occ in [true, false], 
-            have_surgery in [true, false], 
-            have_MRA in [true, false], 
-            nihss in 0:P.max_nihss, 
-            onset in 0:P.max_duration, 
-            t in 0:P.max_duration, 
-            hypertension in [true, false]
-    return states
+    return [State(ane, avm, occ, time, hypertension)
+            for ane in [true, false],
+                avm in [true, false],
+                occ in [true, false],
+                time in 0:P.max_duration,
+                hypertension in [true, false]]
 end
 
 function POMDPs.actions(P::DSAPOMDP)
-    return [DSA, MRA, OBSERVE, SURGERY, COIL, EMBOLIZATION, WAIT]
+    return [TREAT, OBSERVE, WAIT]
+end
+
+function POMDPs.observations(P::DSAPOMDP)
+    return [Observation(is_ane, is_avm, is_occ)
+            for is_ane in [true, false],
+                is_avm in [true, false],
+                is_occ in [true, false]]
+end
+
+function POMDPs.transition(P::DSAPOMDP, s::State, a::Action)
+    if isterminal(P, s) || s.time >= (P.max_duration - 1) || (s.ane && s.avm && s.occ)
+        return Deterministic(P.null_state)
+    end
+
+    p_ane = s.ane ? 1. : (a == TREAT ? 0. : P.p_ane)
+    p_avm = s.avm ? 1. : (a == TREAT ? 0. : P.p_avm)
+    p_occ = s.occ ? 1. : (a == TREAT ? 0. : P.p_occ)
+
+    ane_dist = DiscreteNonParametric([true, false], [p_ane, 1 - p_ane])
+    avm_dist = DiscreteNonParametric([true, false], [p_avm, 1 - p_avm])
+    occ_dist = DiscreteNonParametric([true, false], [p_occ, 1 - p_occ])
+
+    support = collect(0:1:P.max_duration)
+    probs = fill(0., P.max_duration + 1)
+    probs[s.time + 2] = 1.
+    time_dist = DiscreteNonParametric(support, probs)
+
+    hypertension_dist = DiscreteNonParametric([s.hypertension], [1.])
+
+    dist = product_distribution(ane_dist, avm_dist, occ_dist, time_dist, hypertension_dist)
+
+    return dist
 end
 
 function POMDPs.reward(P::DSAPOMDP, s::State, a::Action)
     if isterminal(P, s)
         return 0
     end
-    if a == SURGERY && (~s.avm)
-        return -2000
-    elseif a == COIL && (~s.ane)
-        return -1000
-    elseif a == EMBOLIZATION && (~s.occ)
-        return -1000
-    elseif a == DSA 
+    if a == TREAT
         return -200
-    elseif a == MRA
+    elseif a == OBSERVE && (!s.ane || !s.avm || !s.occ)
         return -100
-    elseif a== OBSERVE && (~s.avm || ~s.ane || ~s.occ)
-        return -100
-    elseif a == WAIT && (s.avm || s.ane || s.occ)
+    elseif a == WAIT && (s.ane || s.avm || s.occ)
         return -50
     else
         return 0
     end
 end
 
+function POMDPs.observation(P::DSAPOMDP, sp::State)
+    is_ane = sp.ane ? DiscreteNonParametric([true, false], [0.7, 0.3]) : DiscreteNonParametric([true, false], [0.4, 0.6])
+    is_avm = sp.avm ? DiscreteNonParametric([true, false], [0.8, 0.2]) : DiscreteNonParametric([true, false], [0.3, 0.7])
+    is_occ = sp.occ ? DiscreteNonParametric([true, false], [0.9, 0.1]) : DiscreteNonParametric([true, false], [0.2, 0.8])
+
+    return product_distribution(is_ane, is_avm, is_occ)
+end
+
 function POMDPs.discount(P::DSAPOMDP)
-    return P.discount_factor
+    return P.discount
 end
 
-function POMDPs.observation(P::DSAPOMDP, s::State, a::Action)
+struct DSABeliefUpdater <: Updater
+    P::DSAPOMDP
+end
 
-    #compute obs elements
-    sentinel_dist = DiscreteNonParametric([-1.], [1.])    
-    siriraj = get_siriraj_score(s)
-    ct = get_ct_score(s)
-    
-    if !isterminal(P, s) 
-        return product_distribution(siriraj, ct)
-    else
-        return product_distribution(sentinel_dist, sentinel_dist)
+function POMDPs.initialize_belief(up::DSABeliefUpdater)
+    belief_dict = Dict{State, Float64}()
+    total_states = 2^5 * (up.P.max_duration + 1)
+    for ane in [true, false], avm in [true, false], occ in [true, false], time in 0:up.P.max_duration, hypertension in [true, false]
+        state = State(ane=ane, avm=avm, occ=occ, time=time, hypertension=hypertension)
+        belief_dict[state] = 1/total_states
     end
+    return Belief(belief_dict)
 end
+
+function POMDPs.update(up::DSABeliefUpdater, b::Belief, a::Action, o::Observation)
+    new_belief_dict = Dict{State, Float64}()
+    for (state, belief_prob) in b.belief
+        updated_belief_prob = rand()
+        
+        new_belief_dict[state] = updated_belief_prob * belief_prob
+    end
+    total_probability = sum(values(new_belief_dict))
+    for (state, belief_prob) in new_belief_dict
+        new_belief_dict[state] = belief_prob / total_probability
+    end
+    return Belief(new_belief_dict)
+end
+
+function POMDPs.initialstate(P::DSAPOMDP)
+    s0 = State(ane=false, avm=false, occ=false, time=0, hypertension=false)
+
+    return Deterministic(s0)
+end
+
+function POMDPs.isterminal(P::DSAPOMDP, s::State)
+    return s == P.null_state
+end
+
+
+function POMDPs.gen(P::DSAPOMDP, s::State, a::Action, rng::AbstractRNG)
+    if isterminal(P, s) || s.time >= (P.max_duration - 1) || (s.ane && s.avm && s.occ)
+        sp = s
+    else
+        next_state = rand(rng, transition(P, s, a))
+        sp = State(ane=next_state[1], avm=next_state[2], occ=next_state[3], time=next_state[4], hypertension=next_state[5])
+    end
+    obs = rand(rng, observation(P, s))
+    observ= Observation(is_ane=obs[1], is_avm=obs[2], is_occ=obs[3])
+    rew = reward(P, s, a)
+    return (sp = sp, o = observ, r = rew)
+end
+
+function Base.rand(rng::AbstractRNG, b::Belief)
+    return rand(rng, b.belief)[1]
+end
+
+function simulate(P::DSAPOMDP, up::Union{DSABeliefUpdater, NothingUpdater}, s0::State, b0::Belief, policy, rng::AbstractRNG, max_steps=24)
+    r_total = 0.
+    r_disc = 0.
+
+    b = deepcopy(b0)
+    s = deepcopy(s0)
+    t = 0
+    d = 1.
+
+    while (!isterminal(P, s) && t < max_steps)
+        t += 1
+        a = action(policy, b)
+        (s, o, r) = gen(P, s, a, rng)
+        b = update(up, b, a, o)
+        r_total += r
+        r_disc += r*d
+        d *= discount(P)
+
+        @show(t=t, s=s, a=a, r=r, r_tot = r_total, r_disc = r_disc, o=o)
+    end
+
+    return (r_total = r_total, r_disc = r_disc)
+end
+
