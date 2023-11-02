@@ -96,6 +96,12 @@ function POMDPs.reward(P::DSAPOMDP, s::State, a::Action)
         return -100
     elseif a == WAIT && (s.ane || s.avm || s.occ)
         return -50
+    elseif a == TREAT && s.ane
+        return 50
+    elseif a == TREAT && s.avm
+        return 500
+    elseif a == TREAT && s.occ
+        return 100
     else
         return 0
     end
