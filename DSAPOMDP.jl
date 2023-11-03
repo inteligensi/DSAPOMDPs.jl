@@ -3,6 +3,8 @@ using POMDPModelTools
 using Parameters
 using Random
 using Distributions
+using BeliefUpdaters
+using StatsBase
 
 export State, Action, Observation, Belief, DSAPOMDP, DSABeliefUpdater
 
@@ -22,15 +24,49 @@ end
     is_occ::Bool
 end
 
-@with_kw mutable struct Belief
+@with_kw mutable struct Belief 
     belief::Dict{State, Float64} = Dict{State, Float64}()
 end
 
+
+@with_kw mutable struct DSABelief     
+    #belief is a distribution over states, we will represent it as a support based on the state space and a probability for each state
+    support::Vector{State} = []
+    probs::Vector{Float64} = []        
+    t::Int64 = 0
+end
+
 @with_kw mutable struct DSAPOMDP <: POMDP{State, Action, Observation}
+    p_obsane_ane::Float64 = 0.7  
+    p_obsnotane_notane::Float64 = 0.8
+    p_obsavm_avm::Float64 = 0.8
+    p_obsnotavm_notavm::Float64 = 0.9
+    p_obsocc_occ::Float64 = 0.9
+    p_obsnotocc_notocc::Float64 = 0.9
+
+    #TODO: use the following Observation probabilities
+
+    # For NIHSS level A (low)
+    p_obsane_hypertensionA::Float64 = 0.6
+    p_obsnotane_nothypertensiA::Float64 = 0.6
+    p_obsavm_hypertensionA::Float64 = 0.6
+    p_obsnotavm_nothypertensiA::Float64 = 0.7
+    p_obsocc_hypertensionA::Float64 = 0.7
+    p_obsnotocc_nothypertensiA::Float64 = 0.6
+
+    # For NIHSS level B (high)
+    p_obsane_hypertensionB::Float64 = 0.8
+    p_obsnotane_nothypertensiB::Float64 = 0.8
+    p_obsavm_hypertensionB::Float64 = 0.9
+    p_obsnotavm_nothypertensiB::Float64 = 0.9
+    p_obsocc_hypertensionB::Float64 = 0.9
+    p_obsnotocc_nothypertensiB::Float64 = 0.8
+
+
     p_avm::Float64 = 0.02
     p_ane::Float64 = 0.05
     p_occ::Float64 = 0.1
-    max_duration::Int64 = 24
+    max_duration::Int64 = 12
     discount::Float64 = 0.95
     null_state::State = State(
         ane = true,
@@ -41,6 +77,7 @@ end
     )
 end
 
+#TODO: move hypertension to observation
 function POMDPs.states(P::DSAPOMDP)
     return [State(ane, avm, occ, time, hypertension)
             for ane in [true, false],
@@ -54,6 +91,7 @@ function POMDPs.actions(P::DSAPOMDP)
     return [TREAT, OBSERVE, WAIT]
 end
 
+
 function POMDPs.observations(P::DSAPOMDP)
     return [Observation(is_ane, is_avm, is_occ)
             for is_ane in [true, false],
@@ -66,13 +104,19 @@ function POMDPs.transition(P::DSAPOMDP, s::State, a::Action)
         return Deterministic(P.null_state)
     end
 
-    p_ane = s.ane ? 1. : (a == TREAT ? 0. : P.p_ane)
-    p_avm = s.avm ? 1. : (a == TREAT ? 0. : P.p_avm)
-    p_occ = s.occ ? 1. : (a == TREAT ? 0. : P.p_occ)
+    if a == TREAT
+        ane_dist = DiscreteNonParametric([true, false], [0., 1.])
+        avm_dist = DiscreteNonParametric([true, false], [0., 1.])
+        occ_dist = DiscreteNonParametric([true, false], [0., 1.])
+    else
+        p_ane = s.ane ? 1. : P.p_ane
+        p_avm = s.avm ? 1. : P.p_avm
+        p_occ = s.occ ? 1. : P.p_occ
 
-    ane_dist = DiscreteNonParametric([true, false], [p_ane, 1 - p_ane])
-    avm_dist = DiscreteNonParametric([true, false], [p_avm, 1 - p_avm])
-    occ_dist = DiscreteNonParametric([true, false], [p_occ, 1 - p_occ])
+        ane_dist = DiscreteNonParametric([true, false], [p_ane, 1-p_ane])
+        avm_dist = DiscreteNonParametric([true, false], [p_avm, 1-p_avm])
+        occ_dist = DiscreteNonParametric([true, false], [p_occ, 1-p_occ])
+    end
 
     support = collect(0:1:P.max_duration)
     probs = fill(0., P.max_duration + 1)
@@ -86,33 +130,40 @@ function POMDPs.transition(P::DSAPOMDP, s::State, a::Action)
     return dist
 end
 
-function POMDPs.reward(P::DSAPOMDP, s::State, a::Action)
-    if isterminal(P, s)
+function POMDPs.reward(P::DSAPOMDP, s::State, a::Action, sp::State)
+    #:TODO update r to accumulate and separate if TREAT conditions
+    # Be creative
+
+    r = 0
+
+    if !isterminal(P, s) && isterminal(P, sp)
+        r+= -100000 # Huge penalty for first time entering terminal state
+    elseif isterminal(P, s)
         return 0
     end
-    if a == TREAT
-        return -200
-    elseif a == OBSERVE && (!s.ane || !s.avm || !s.occ)
-        return -100
+
+    if a == TREAT && !s.ane && !s.avm && !s.occ
+        return -10000 #we get sued
+    elseif a == TREAT && (s.ane || s.avm || s.occ)
+        return 5000 #we heal the patient
+    elseif a == TREAT
+        return -100 #costly procedure
+    elseif a == OBSERVE !s.ane && !s.avm && !s.occ
+        return -100 #oppurtunity cost
     elseif a == WAIT && (s.ane || s.avm || s.occ)
-        return -50
-    elseif a == TREAT && s.ane
-        return 50
-    elseif a == TREAT && s.avm
-        return 500
-    elseif a == TREAT && s.occ
-        return 100
+        return -50 #we lose a patient
     else
         return 0
     end
 end
 
+#TODO: Change the observation to be hypertension and NIHSS score
+# Observation Model: P(O|S) ---> P(S|O) = P(O|S)P(S)/P(O)
 function POMDPs.observation(P::DSAPOMDP, sp::State)
-    is_ane = sp.ane ? DiscreteNonParametric([true, false], [0.7, 0.3]) : DiscreteNonParametric([true, false], [0.4, 0.6])
-    is_avm = sp.avm ? DiscreteNonParametric([true, false], [0.8, 0.2]) : DiscreteNonParametric([true, false], [0.3, 0.7])
-    is_occ = sp.occ ? DiscreteNonParametric([true, false], [0.9, 0.1]) : DiscreteNonParametric([true, false], [0.2, 0.8])
-
-    return product_distribution(is_ane, is_avm, is_occ)
+    dist_ane = sp.ane ? DiscreteNonParametric([true, false], [P.p_obsane_ane, 1-P.p_obsane_ane]) : DiscreteNonParametric([true, false], [1-P.p_obsnotane_notane, P.p_obsnotane_notane])
+    dist_avm = sp.avm ? DiscreteNonParametric([true, false], [P.p_obsavm_avm, 1-P.p_obsavm_avm]) : DiscreteNonParametric([true, false], [1-P.p_obsnotavm_notavm, P.p_obsnotavm_notavm])
+    dist_occ = sp.occ ? DiscreteNonParametric([true, false], [P.p_obsocc_occ, 1-P.p_obsocc_occ]) : DiscreteNonParametric([true, false], [1-P.p_obsnotocc_notocc, P.p_obsnotocc_notocc])
+    return product_distribution(dist_ane, dist_avm, dist_occ)
 end
 
 function POMDPs.discount(P::DSAPOMDP)
@@ -124,13 +175,20 @@ struct DSABeliefUpdater <: Updater
 end
 
 function POMDPs.initialize_belief(up::DSABeliefUpdater)
-    belief_dict = Dict{State, Float64}()
-    total_states = 2^5 * (up.P.max_duration + 1)
-    for ane in [true, false], avm in [true, false], occ in [true, false], time in 0:up.P.max_duration, hypertension in [true, false]
-        state = State(ane=ane, avm=avm, occ=occ, time=time, hypertension=hypertension)
-        belief_dict[state] = 1/total_states
-    end
-    return Belief(belief_dict)
+    # belief_dict = Dict{State, Float64}()
+    # total_states = 2^5
+    # for ane in [true, false], avm in [true, false], occ in [true, false], hypertension in [true, false]
+    #     state = State(ane=ane, avm=avm, occ=occ, time=0, hypertension=hypertension)
+    #     belief_dict[state] = 1/total_states
+    # end
+    # return Belief(belief_dict)
+
+    #initialize belief as a uniform distribution over the state space for when t=0 and 0 for all other times
+    all_support = [states(up.P)...]
+    support = [state for state in all_support if state.time == 0]
+    probs = fill(1/length(support), length(support))    
+
+    return DSABelief(support, probs, 0)
 end
 
 function POMDPs.update(up::DSABeliefUpdater, b::Belief, a::Action, o::Observation)
@@ -147,11 +205,30 @@ function POMDPs.update(up::DSABeliefUpdater, b::Belief, a::Action, o::Observatio
     return Belief(new_belief_dict)
 end
 
+function time_update(s::State)
+    #update the time of the state
+    return State(ane=s.ane, avm=s.avm, occ=s.occ, time=s.time+1, hypertension=s.hypertension)
+end
+
+function POMDPs.update(up::DSABeliefUpdater, b::DSABelief, a::Action, o::Observation)
+    #update DSABelief
+    #recompute the probability of each state in the support
+    new_support = time_update.(b.support)
+    old_probs = b.probs
+
+    #update new_probs using bayes rule on the observation
+    new_probs = fill(0., length(new_support))
+
+
+    
+end
+
 function POMDPs.initialstate(P::DSAPOMDP)
     s0 = State(ane=false, avm=false, occ=false, time=0, hypertension=false)
 
     return Deterministic(s0)
 end
+
 
 function POMDPs.isterminal(P::DSAPOMDP, s::State)
     return s == P.null_state
@@ -167,7 +244,7 @@ function POMDPs.gen(P::DSAPOMDP, s::State, a::Action, rng::AbstractRNG)
     end
     obs = rand(rng, observation(P, s))
     observ= Observation(is_ane=obs[1], is_avm=obs[2], is_occ=obs[3])
-    rew = reward(P, s, a)
+    rew = reward(P, s, a, sp)
     return (sp = sp, o = observ, r = rew)
 end
 
@@ -175,7 +252,19 @@ function Base.rand(rng::AbstractRNG, b::Belief)
     return rand(rng, b.belief)[1]
 end
 
-function simulate(P::DSAPOMDP, up::Union{DSABeliefUpdater, NothingUpdater}, s0::State, b0::Belief, policy, rng::AbstractRNG, max_steps=24)
+function Base.rand(rng::AbstractRNG, b::DSABelief)
+    return sample(rng, b.support, Weights(b.probs))
+end
+
+function support(b::DSABelief)
+    return b.support
+end
+
+function probs(b::DSABelief)
+    return b.probs
+end
+
+function simulate(P::DSAPOMDP, up::Union{DSABeliefUpdater, NothingUpdater}, s0::State, b0::Union{Belief, DSABelief}, policy, rng::AbstractRNG; max_steps=24, verbose=false)
     r_total = 0.
     r_disc = 0.
 
@@ -192,10 +281,27 @@ function simulate(P::DSAPOMDP, up::Union{DSABeliefUpdater, NothingUpdater}, s0::
         r_total += r
         r_disc += r*d
         d *= discount(P)
-
-        @show(t=t, s=s, a=a, r=r, r_tot = r_total, r_disc = r_disc, o=o)
+        if verbose
+            @show(t=t, s=s, a=a, r=r, r_tot = r_total, r_disc = r_disc, o=o)
+        end
     end
 
     return (r_total = r_total, r_disc = r_disc)
 end
 
+
+function evaluate(;P, up, b0, policies, rng, num_reps, num_steps)
+    results = Array{Float64}(undef, length(policies), num_runs)
+
+    for i in 1:num_reps
+        s0 = rand(b0)
+        for (j, policy) in enumerate(policies)
+            (r_tot, r_disc) = simulate(P, up, s0, b0, policy, rng, max_steps=12)
+            results[j, i] = r_tot
+        end
+    end
+    #compute mean and std
+    means = mean(results, dims=2)
+    stds = std(results, dims=2)
+    return (means=means, stds=stds)    
+end
