@@ -13,15 +13,17 @@ export State, Action, Observation, Belief, DSAPOMDP, DSABeliefUpdater
     avm::Bool = false
     occ::Bool = false
     time::Int64 = 0
-    hypertension::Bool = false
 end
 
 @enum Action TREAT OBSERVE WAIT
 
 @with_kw mutable struct Observation
-    is_ane::Bool
-    is_avm::Bool
-    is_occ::Bool
+    hypertension_high_if_ane::Bool
+    hypertension_high_if_avm::Bool
+    hypertension_high_if_occ::Bool
+    hypertension_low_if_ane::Bool
+    hypertension_low_if_avm::Bool
+    hypertension_low_if_occ::Bool
 end
 
 @with_kw mutable struct Belief 
@@ -72,19 +74,17 @@ end
         ane = true,
         avm = true,
         occ = true,
-        time = -1,
-        hypertension = true
+        time = -1
     )
 end
 
 #TODO: move hypertension to observation
 function POMDPs.states(P::DSAPOMDP)
-    return [State(ane, avm, occ, time, hypertension)
+    return [State(ane, avm, occ, time)
             for ane in [true, false],
                 avm in [true, false],
                 occ in [true, false],
-                time in 0:P.max_duration,
-                hypertension in [true, false]]
+                time in 0:P.max_duration]
 end
 
 function POMDPs.actions(P::DSAPOMDP)
@@ -93,10 +93,9 @@ end
 
 
 function POMDPs.observations(P::DSAPOMDP)
-    return [Observation(is_ane, is_avm, is_occ)
-            for is_ane in [true, false],
-                is_avm in [true, false],
-                is_occ in [true, false]]
+    return [Observation(hypertension, nihss)
+            for hypertension in [true, false],
+                nihss in [true, false]]
 end
 
 function POMDPs.transition(P::DSAPOMDP, s::State, a::Action)
@@ -123,9 +122,7 @@ function POMDPs.transition(P::DSAPOMDP, s::State, a::Action)
     probs[s.time + 2] = 1.
     time_dist = DiscreteNonParametric(support, probs)
 
-    hypertension_dist = DiscreteNonParametric([s.hypertension], [1.])
-
-    dist = product_distribution(ane_dist, avm_dist, occ_dist, time_dist, hypertension_dist)
+    dist = product_distribution(ane_dist, avm_dist, occ_dist, time_dist)
 
     return dist
 end
@@ -137,33 +134,45 @@ function POMDPs.reward(P::DSAPOMDP, s::State, a::Action, sp::State)
     r = 0
 
     if !isterminal(P, s) && isterminal(P, sp)
-        r+= -100000 # Huge penalty for first time entering terminal state
+        r += -100000 # Huge penalty for first time entering terminal state
     elseif isterminal(P, s)
         return 0
     end
 
-    if a == TREAT && !s.ane && !s.avm && !s.occ
-        return -10000 #we get sued
-    elseif a == TREAT && (s.ane || s.avm || s.occ)
-        return 5000 #we heal the patient
-    elseif a == TREAT
-        return -100 #costly procedure
-    elseif a == OBSERVE !s.ane && !s.avm && !s.occ
-        return -100 #oppurtunity cost
-    elseif a == WAIT && (s.ane || s.avm || s.occ)
-        return -50 #we lose a patient
-    else
-        return 0
+    if a == TREAT
+        r += -100 #costly procedure
     end
+
+    if a == TREAT && !s.ane && !s.avm && !s.occ
+        r += -10000 #we get sued
+    elseif a == TREAT && (s.ane || s.avm || s.occ)
+        r += 5000 #we heal the patient
+    elseif a == OBSERVE && !s.ane && !s.avm && !s.occ
+        r += -100 #oppurtunity cost
+    elseif a == OBSERVE && (s.ane || s.avm || s.occ)
+        r += -1000
+    elseif a == WAIT && !s.ane && !s.avm && !s.occ
+        r += 500
+    elseif a == WAIT && (s.ane || s.avm || s.occ)
+        r += -50 #we lose a patient
+    end
+    
+    return r
 end
 
 #TODO: Change the observation to be hypertension and NIHSS score
 # Observation Model: P(O|S) ---> P(S|O) = P(O|S)P(S)/P(O)
 function POMDPs.observation(P::DSAPOMDP, sp::State)
-    dist_ane = sp.ane ? DiscreteNonParametric([true, false], [P.p_obsane_ane, 1-P.p_obsane_ane]) : DiscreteNonParametric([true, false], [1-P.p_obsnotane_notane, P.p_obsnotane_notane])
-    dist_avm = sp.avm ? DiscreteNonParametric([true, false], [P.p_obsavm_avm, 1-P.p_obsavm_avm]) : DiscreteNonParametric([true, false], [1-P.p_obsnotavm_notavm, P.p_obsnotavm_notavm])
-    dist_occ = sp.occ ? DiscreteNonParametric([true, false], [P.p_obsocc_occ, 1-P.p_obsocc_occ]) : DiscreteNonParametric([true, false], [1-P.p_obsnotocc_notocc, P.p_obsnotocc_notocc])
-    return product_distribution(dist_ane, dist_avm, dist_occ)
+    dist_ane_hypertensionA = sp.ane ? DiscreteNonParametric([true, false], [P.p_obsane_hypertensionA, 1-P.p_obsane_hypertensionA]) : DiscreteNonParametric([true, false], [1-P.p_obsnotane_nothypertensiA, P.p_obsnotane_nothypertensiA])
+    dist_avm_hypertensionA = sp.avm ? DiscreteNonParametric([true, false], [P.p_obsavm_hypertensionA, 1-P.p_obsavm_hypertensionA]) : DiscreteNonParametric([true, false], [1-P.p_obsnotavm_nothypertensiA, P.p_obsnotavm_nothypertensiA])
+    dist_occ_hypertensionA = sp.occ ? DiscreteNonParametric([true, false], [P.p_obsocc_hypertensionA, 1-P.p_obsocc_hypertensionA]) : DiscreteNonParametric([true, false], [1-P.p_obsnotocc_nothypertensiA, P.p_obsnotocc_nothypertensiA])
+    dist_ane_hypertensionB = sp.ane ? DiscreteNonParametric([true, false], [P.p_obsane_hypertensionB, 1-P.p_obsane_hypertensionB]) : DiscreteNonParametric([true, false], [1-P.p_obsnotane_nothypertensiB, P.p_obsnotane_nothypertensiB])
+    dist_avm_hypertensionB = sp.avm ? DiscreteNonParametric([true, false], [P.p_obsavm_hypertensionB, 1-P.p_obsavm_hypertensionB]) : DiscreteNonParametric([true, false], [1-P.p_obsnotavm_nothypertensiB, P.p_obsnotavm_nothypertensiB])
+    dist_occ_hypertensionB = sp.occ ? DiscreteNonParametric([true, false], [P.p_obsocc_hypertensionB, 1-P.p_obsocc_hypertensionB]) : DiscreteNonParametric([true, false], [1-P.p_obsnotocc_nothypertensiB, P.p_obsnotocc_nothypertensiB])
+
+    dist = product_distribution(dist_ane_hypertensionA, dist_avm_hypertensionA, dist_occ_hypertensionA, dist_ane_hypertensionB, dist_avm_hypertensionB, dist_occ_hypertensionB)
+
+    return dist
 end
 
 function POMDPs.discount(P::DSAPOMDP)
@@ -240,10 +249,17 @@ function POMDPs.gen(P::DSAPOMDP, s::State, a::Action, rng::AbstractRNG)
         sp = s
     else
         next_state = rand(rng, transition(P, s, a))
-        sp = State(ane=next_state[1], avm=next_state[2], occ=next_state[3], time=next_state[4], hypertension=next_state[5])
+        sp = State(ane=next_state[1], avm=next_state[2], occ=next_state[3], time=next_state[4])
     end
     obs = rand(rng, observation(P, s))
-    observ= Observation(is_ane=obs[1], is_avm=obs[2], is_occ=obs[3])
+    observ= Observation(
+        hypertension_high_if_ane=obs[1],
+        hypertension_high_if_avm=obs[2],
+        hypertension_high_if_occ=obs[3],
+        hypertension_low_if_ane=obs[4],
+        hypertension_low_if_avm=obs[5],
+        hypertension_low_if_occ=obs[6]
+    )
     rew = reward(P, s, a, sp)
     return (sp = sp, o = observ, r = rew)
 end

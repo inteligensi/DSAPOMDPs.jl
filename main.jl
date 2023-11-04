@@ -33,3 +33,7 @@ end
 simulate(P, up, s0, b0, pomcp_planner, rng, max_steps=12, verbose=true)
 
 #implement simple PBVI
+
+policy = RandomPolicy(P)
+a = action(policy, b0)
+(s, o, r) = gen(P, s0, a, rng)
