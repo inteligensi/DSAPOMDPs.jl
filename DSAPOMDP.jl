@@ -138,7 +138,7 @@ function POMDPs.reward(P::DSAPOMDP, s::State, a::Action, sp::State)
     if a == TREAT && !s.ane && !s.avm && !s.occ
         r += -10000 #we get sued
     elseif a == TREAT && (s.ane || s.avm || s.occ)
-        r += 5000 #we heal the patient
+        r += 50000 #we heal the patient
     elseif a == OBSERVE && !s.ane && !s.avm && !s.occ
         r += -100 #oppurtunity cost
     elseif a == OBSERVE && (s.ane || s.avm || s.occ)
