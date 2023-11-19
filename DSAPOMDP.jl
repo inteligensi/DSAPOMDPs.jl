@@ -15,15 +15,16 @@ export State, Action, Observation, Belief, DSAPOMDP, DSABeliefUpdater
     time::Int64 = 0
 end
 
-@enum Action TREAT OBSERVE WAIT
+@enum Action DSA MRA OBSERVE SURGERY COIL EMBOLIZATION WAIT
 @enum NIHSS NIHSS_A NIHSS_B
 
 @with_kw mutable struct Observation
-    hp::Bool
     nihss::NIHSS
+    ct::Bool
+    siriraj::Float64
 end
 
-Observation(hp::Int64, nihss::Int64) = Observation(hp, NIHSS(nihss))
+Observation(nihss::Int64, ct::Int64, siriraj::Int64) = Observation(hp, NIHSS(nihss), ct, siriraj)
 
 
 @with_kw mutable struct Belief 
@@ -34,23 +35,13 @@ end
 @with_kw mutable struct DSABelief     
     #belief is a distribution over states, we will represent it as a support based on the state space and a probability for each state
     support::Vector{State} = []
-    probs::Vector{Float64} = []        
+    probs::Vector{Float64} = []
     t::Int64 = 0
 end
 
 @with_kw mutable struct DSAPOMDP <: POMDP{State, Action, Observation}
 
-    p_ohp_ane_avm_occ::Float64 = 0.9
-    p_ohp_ane_avm_notocc::Float64 = 0.8
-    p_ohp_ane_notavm_occ::Float64 = 0.8
-    p_ohp_ane_notavm_notocc::Float64 = 0.7
-    p_ohp_notane_avm_occ::Float64 = 0.8
-    p_ohp_notane_avm_notocc::Float64 = 0.7
-    p_ohp_notane_notavm_occ::Float64 = 0.7
-    p_ohp_notane_notavm_notocc::Float64 = 0.5
-
-
-    p_onihssA_ane_avm_occ::Float64 = 0.95
+    p_onihssA_ane_avm_occ::Float64 = 0.9
     p_onihssA_ane_avm_notocc::Float64 = 0.8
     p_onihssA_ane_notavm_occ::Float64 = 0.8
     p_onihssA_ane_notavm_notocc::Float64 = 0.8
@@ -58,6 +49,31 @@ end
     p_onihssA_notane_avm_notocc::Float64 = 0.7
     p_onihssA_notane_notavm_occ::Float64 = 0.7
     p_onihssA_notane_notavm_notocc::Float64 = 0.3
+
+    # [NIHSSA, NIHSSB]
+    # [ANE_AVM_OCC, ANE_AVM_NOTOCC, ANE_NOTAVM_OCC, ANE_NOTAVM_NOTOCC, NOTANE_AVM_OCC, NOTANE_AVM_NOTOCC, NOTANE_NOTAVM_OCC, NOTANE_NOTAVM_NOTOCC]
+    # [WAIT, OBSERVE, MRA, DSA]
+    p_onihss_state_action::Vector{Vector{Vector{Float64}}} = [
+        [ [0.6, 0.75, 0.85, 0.9], [0.6, 0.65, 0.75, 0.8], [0.6, 0.65, 0.75, 0.8], [0.6, 0.65, 0.75, 0.8], [0.6, 0.66, 0.68, 0.7], [0.6, 0.66, 0.68, 0.7], [0.6, 0.66, 0.68, 0.7], [0.1, 0.2, 0.25, 0.3] ],
+        [ [0.4, 0.25, 0.15, 0.1], [0.4, 0.35, 0.25, 0.2], [0.4, 0.35, 0.25, 0.2], [0.4, 0.35, 0.25, 0.2], [0.4, 0.34, 0.32, 0.3], [0.4, 0.34, 0.32, 0.3], [0.4, 0.34, 0.32, 0.3], [0.9, 0.8, 0.75, 0.7] ]
+    ]
+
+    # [TRUE, FALSE]
+    # [ANE_AVM_OCC, ANE_AVM_NOTOCC, ANE_NOTAVM_OCC, ANE_NOTAVM_NOTOCC, NOTANE_AVM_OCC, NOTANE_AVM_NOTOCC, NOTANE_NOTAVM_OCC, NOTANE_NOTAVM_NOTOCC]
+    # [WAIT, OBSERVE, MRA, DSA]
+    p_oct_state_action::Vector{Vector{Vector{Float64}}} = [
+        [ [0.6, 0.75, 0.85, 0.9], [0.6, 0.65, 0.75, 0.8], [0.6, 0.65, 0.75, 0.8], [0.6, 0.65, 0.75, 0.8], [0.6, 0.66, 0.68, 0.7], [0.6, 0.66, 0.68, 0.7], [0.6, 0.66, 0.68, 0.7], [0.1, 0.2, 0.25, 0.3] ],
+        [ [0.4, 0.25, 0.15, 0.1], [0.4, 0.35, 0.25, 0.2], [0.4, 0.35, 0.25, 0.2], [0.4, 0.35, 0.25, 0.2], [0.4, 0.34, 0.32, 0.3], [0.4, 0.34, 0.32, 0.3], [0.4, 0.34, 0.32, 0.3], [0.9, 0.8, 0.75, 0.7] ]
+    ]
+
+    # [1, 2, 3]
+    # [ANE_AVM_OCC, ANE_AVM_NOTOCC, ANE_NOTAVM_OCC, ANE_NOTAVM_NOTOCC, NOTANE_AVM_OCC, NOTANE_AVM_NOTOCC, NOTANE_NOTAVM_OCC, NOTANE_NOTAVM_NOTOCC]
+    # [WAIT, OBSERVE, MRA, DSA]
+    p_osiriraj_state_action::Vector{Vector{Vector{Float64}}} = [
+        [ [0.4, 0.55, 0.6, 0.65], [0.4, 0.55, 0.6, 0.65], [0.4, 0.55, 0.6, 0.65], [0.4, 0.55, 0.6, 0.65], [0.4, 0.55, 0.6, 0.65], [0.4, 0.55, 0.6, 0.65], [0.4, 0.55, 0.6, 0.65], [0.4, 0.55, 0.6, 0.65] ],
+        [ [0.2, 0.1, 0.3, 0.2], [0.2, 0.1, 0.3, 0.2], [0.2, 0.1, 0.3, 0.2], [0.2, 0.1, 0.3, 0.2], [0.2, 0.1, 0.3, 0.2], [0.2, 0.1, 0.3, 0.2], [0.2, 0.1, 0.3, 0.2], [0.2, 0.1, 0.3, 0.2] ],
+        [ [0.3, 0.35, 0.1, 0.15], [0.3, 0.35, 0.1, 0.15], [0.3, 0.35, 0.1, 0.15], [0.3, 0.35, 0.1, 0.15], [0.3, 0.35, 0.1, 0.15], [0.3, 0.35, 0.1, 0.15], [0.3, 0.35, 0.1, 0.15], [0.3, 0.35, 0.1, 0.15] ]
+    ]
 
 
     p_avm::Float64 = 0.02
@@ -81,13 +97,13 @@ end
 
 
 function POMDPs.actions(P::DSAPOMDP)
-    return [TREAT, OBSERVE, WAIT]
+    return [DSA, MRA, OBSERVE, SURGERY, COIL, EMBOLIZATION, WAIT]
 end
 
 
 function POMDPs.observations(P::DSAPOMDP)
-    return [Observation(hypertension, nihss)
-            for hypertension in [true, false] for nihss in [NIHSS_A, NIHSS_B]]
+    return [Observation(nihss, ct, siriraj)
+            for nihss in [NIHSS_A, NIHSS_B] for ct in [true, false] for siriraj in [1.0, 2.0, 3.0]]
 end
 
 function POMDPs.transition(P::DSAPOMDP, s::State, a::Action)
@@ -95,7 +111,7 @@ function POMDPs.transition(P::DSAPOMDP, s::State, a::Action)
         return Deterministic(P.null_state)
     end
 
-    if a == TREAT
+    if a == SURGERY || a == COIL || a == EMBOLIZATION # divide - need to confirm / 
         ane_dist = DiscreteNonParametric([true, false], [0., 1.])
         avm_dist = DiscreteNonParametric([true, false], [0., 1.])
         occ_dist = DiscreteNonParametric([true, false], [0., 1.])
@@ -131,22 +147,32 @@ function POMDPs.reward(P::DSAPOMDP, s::State, a::Action, sp::State)
         return 0
     end
 
-    if a == TREAT
+    if a == DSA || a == MRA || a == SURGERY || a == COIL || a == EMBOLIZATION
         r += -100 #costly procedure
     end
 
-    if a == TREAT && !s.ane && !s.avm && !s.occ
-        r += -10000 #we get sued
-    elseif a == TREAT && (s.ane || s.avm || s.occ)
-        r += 50000 #we heal the patient
+    if a == SURGERY && !s.avm
+        r += -10000
+    elseif a == SURGERY && s.avm
+        r += 10000
+    elseif a == COIL && !s.ane
+        r += -5000
+    elseif a == COIL && s.ane
+        r += 5000
+    elseif a == EMBOLIZATION && !s.occ
+        r += -5000
+    elseif a == EMBOLIZATION && s.occ
+        r += 5000
+    elseif a == DSA
+        r += -100
     elseif a == OBSERVE && !s.ane && !s.avm && !s.occ
-        r += -100 #oppurtunity cost
+        r += 100
     elseif a == OBSERVE && (s.ane || s.avm || s.occ)
-        r += -1000
+        r += -100
     elseif a == WAIT && !s.ane && !s.avm && !s.occ
-        r += 500
+        r += 50
     elseif a == WAIT && (s.ane || s.avm || s.occ)
-        r += -50 #we lose a patient
+        r += -50
     end
     
     return r
@@ -156,13 +182,94 @@ end
 # Observation Model: P(O|S) ---> P(S|O) = P(O|S)P(S)/P(O)
 function POMDPs.observation(P::DSAPOMDP, sp::State)
     state_status = ""*string(sp.ane ? "ane" : "notane") * "_" * string(sp.avm ? "avm" : "notavm") * "_" * string(sp.occ ? "occ" : "notocc")
-    hp_prob = getfield(P, Symbol("p_ohp_"*state_status))
-    dist_hp = DiscreteNonParametric([true, false], [hp_prob, 1-hp_prob])
     
     nihss_prob = getfield(P, Symbol("p_onihssA_"*state_status))
     dist_nihss = DiscreteNonParametric([Int(nihss) for nihss in [NIHSS_A, NIHSS_B]], [nihss_prob, 1-nihss_prob])
 
-    return product_distribution(dist_hp, dist_nihss)
+    if sp.avm || sp.ane || sp.occ
+        ct_prob = 0.4*sp.avm + 0.2*sp.ane + 0.3*sp.occ 
+    else
+        ct_prob = 0.1
+    end
+    dist_ct = DiscreteNonParametric([true, false], [ct_prob, 1-ct_prob])
+
+    siriraj = 0.
+    if sp.avm
+        siriraj += 1.25
+    end
+    if sp.ane
+        siriraj += 0.5
+    end
+    if sp.occ
+        siriraj += 0.25
+    end
+    siriraj = max(min(round(siriraj, digits=1), 3.0), 1.0)
+    probs = [0.4, 0.3, 0.3]
+    if siriraj == 1.0
+        probs[1] = 0.9
+        probs[2] = 0.05
+        probs[3] = 0.05
+    elseif siriraj == 2.0
+        probs[1] = 0.05
+        probs[2] = 0.9
+        probs[3] = 0.05
+    elseif siriraj == 3.0
+        probs[1] = 0.05
+        probs[2] = 0.05
+        probs[3] = 0.9
+    end
+    dist_siriraj = DiscreteNonParametric([1.0, 2.0, 3.0], probs)
+
+    return product_distribution(dist_nihss, dist_ct, dist_siriraj)
+end
+
+# Observation Model: P(O|S) ---> P(S|O) = P(O|S)P(S)/P(O)
+function POMDPs.observation(P::DSAPOMDP, sp::State, a::Action)
+    # [ANE_AVM_OCC, ANE_AVM_NOTOCC, ANE_NOTAVM_OCC, ANE_NOTAVM_NOTOCC, NOTANE_AVM_OCC, NOTANE_AVM_NOTOCC, NOTANE_NOTAVM_OCC, NOTANE_NOTAVM_NOTOCC]
+    if sp.ane && sp.avm && sp.occ
+        state_index = 1
+    elseif sp.ane && sp.avm && !sp.occ
+        state_index = 2
+    elseif sp.ane && !sp.avm && sp.occ
+        state_index = 3
+    elseif sp.ane && !sp.avm && !sp.occ
+        state_index = 4
+    elseif !sp.ane && sp.avm && sp.occ
+        state_index = 5
+    elseif !sp.ane && sp.avm && !sp.occ
+        state_index = 6
+    elseif !sp.ane && !sp.avm && sp.occ
+        state_index = 7
+    elseif !sp.ane && !sp.avm && !sp.occ
+        state_index = 8
+    end
+
+    # [WAIT, OBSERVE, MRA, DSA]
+    if a == WAIT
+        action_index = 1
+    elseif a == OBSERVE
+        action_index = 2
+    elseif a == MRA
+        action_index = 3
+    elseif a == DSA
+        action_index = 4
+    end
+
+    nihssA_prob = P.p_onihss_state_action[1][state_index][action_index]
+    nihssB_prob = P.p_onihss_state_action[2][state_index][action_index]
+    dist_nihss = DiscreteNonParametric([Int(nihss) for nihss in [NIHSS_A, NIHSS_B]], [nihssA_prob, nihssB_prob])
+
+    ct_prob = P.p_oct_state_action[1][state_index][action_index]
+    dist_ct = DiscreteNonParametric([true, false], [ct_prob, 1-ct_prob])
+
+    siriraj_prob = [0.0, 0.0, 0.0]
+    siriraj_prob[1] = P.p_osiriraj_state_action[1][state_index][action_index]
+    siriraj_prob[2] = P.p_osiriraj_state_action[2][state_index][action_index]
+    siriraj_prob[3] = P.p_osiriraj_state_action[3][state_index][action_index]
+
+    dist_siriraj = DiscreteNonParametric([1.0, 2.0, 3.0], siriraj_prob)
+
+    return product_distribution(dist_nihss, dist_ct, dist_siriraj)
 end
 
 function POMDPs.discount(P::DSAPOMDP)
@@ -233,10 +340,12 @@ function POMDPs.gen(P::DSAPOMDP, s::State, a::Action, rng::AbstractRNG)
         next_state = rand(rng, transition(P, s, a))
         sp = State(ane=next_state[1], avm=next_state[2], occ=next_state[3], time=next_state[4])
     end
-    obs = rand(rng, observation(P, sp))
+    # obs = rand(rng, observation(P, sp))
+    obs = rand(rng, observation(P, sp, a))
     obs = Observation(
-        hp = obs[1],
-        nihss = NIHSS(obs[2])
+        nihss = NIHSS(Int(obs[1])),
+        ct = obs[2],
+        siriraj = obs[3]
     )
     rew = reward(P, s, a, sp)
     return (sp = sp, o = obs, r = rew)
@@ -303,3 +412,4 @@ end
 
 # function get_obs_likelihood(P::DSAPOMDP, o::Observation)
     #get the likelihood of the state given the obs P_o_given_state
+    

@@ -51,6 +51,6 @@
 # end
 
 function Distributions.pdf(dist::Union{Distributions.ProductDistribution}, o::Observation)
-    o_values = [o.hp, Int(o.nihss == NIHSS_A)]
+    o_values = [o.hp, Int(o.nihss == NIHSS_A), o.ct, o.siriraj]
     return pdf(dist, o_values)
 end

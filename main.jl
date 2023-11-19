@@ -91,7 +91,7 @@ d = 1.0
 for step in eachstep(history_pomcp)
     # @show("action: %s, observation: %s\n", step.a, step.o)
     global rsum += (step.r * d)
-    d *= discount(P)
+    global d *= discount(P)
 end
 @show rsum;
 
@@ -100,7 +100,7 @@ d = 1.0
 for step in eachstep(history)
     # @show("action: %s, observation: %s\n", step.a, step.o)
     global rsum += (step.r * d)
-    d *= discount(P)
+    global d *= discount(P)
 end
 @show rsum;
 
@@ -124,9 +124,9 @@ inchrome(D3Tree(info[:tree], init_expand=1))
 # simulate(P, up, s0, b0, pomcp_planner, rng, max_steps=12, verbose=true)
 
 # #implement simple PBVI
+# ardespot, mcvi, pbvi, pomcp, mcts, random (time, r_disc)
+# visualize each step action and belief
 
 policy = RandomPolicy(P)
 a = action(policy, b0)
 (s, o, r) = gen(P, s0, a, rng)
-
-ob = rand(observation(P, s))
