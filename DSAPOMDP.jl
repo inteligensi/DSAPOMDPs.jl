@@ -24,7 +24,7 @@ end
     siriraj::Float64
 end
 
-Observation(nihss::Int64, ct::Int64, siriraj::Int64) = Observation(hp, NIHSS(nihss), ct, siriraj)
+Observation(nihss::Int64, ct::Int64, siriraj::Int64) = Observation(NIHSS(nihss), ct, siriraj)
 
 
 @with_kw mutable struct Belief 
@@ -71,7 +71,7 @@ end
     # [WAIT, OBSERVE, MRA, DSA]
     p_osiriraj_state_action::Vector{Vector{Vector{Float64}}} = [
         [ [0.4, 0.55, 0.6, 0.65], [0.4, 0.55, 0.6, 0.65], [0.4, 0.55, 0.6, 0.65], [0.4, 0.55, 0.6, 0.65], [0.4, 0.55, 0.6, 0.65], [0.4, 0.55, 0.6, 0.65], [0.4, 0.55, 0.6, 0.65], [0.4, 0.55, 0.6, 0.65] ],
-        [ [0.2, 0.1, 0.3, 0.2], [0.2, 0.1, 0.3, 0.2], [0.2, 0.1, 0.3, 0.2], [0.2, 0.1, 0.3, 0.2], [0.2, 0.1, 0.3, 0.2], [0.2, 0.1, 0.3, 0.2], [0.2, 0.1, 0.3, 0.2], [0.2, 0.1, 0.3, 0.2] ],
+        [ [0.3, 0.1, 0.3, 0.2], [0.3, 0.1, 0.3, 0.2], [0.3, 0.1, 0.3, 0.2], [0.3, 0.1, 0.3, 0.2], [0.3, 0.1, 0.3, 0.2], [0.3, 0.1, 0.3, 0.2], [0.3, 0.1, 0.3, 0.2], [0.3, 0.1, 0.3, 0.2] ],
         [ [0.3, 0.35, 0.1, 0.15], [0.3, 0.35, 0.1, 0.15], [0.3, 0.35, 0.1, 0.15], [0.3, 0.35, 0.1, 0.15], [0.3, 0.35, 0.1, 0.15], [0.3, 0.35, 0.1, 0.15], [0.3, 0.35, 0.1, 0.15], [0.3, 0.35, 0.1, 0.15] ]
     ]
 
@@ -245,6 +245,7 @@ function POMDPs.observation(P::DSAPOMDP, sp::State, a::Action)
     end
 
     # [WAIT, OBSERVE, MRA, DSA]
+    action_index = 0
     if a == WAIT
         action_index = 1
     elseif a == OBSERVE
@@ -253,6 +254,10 @@ function POMDPs.observation(P::DSAPOMDP, sp::State, a::Action)
         action_index = 3
     elseif a == DSA
         action_index = 4
+    end
+
+    if action_index == 0
+        return observation(P, sp)
     end
 
     nihssA_prob = P.p_onihss_state_action[1][state_index][action_index]
