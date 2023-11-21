@@ -17,7 +17,7 @@ P = DSAPOMDP()
 rng = MersenneTwister(1)
 b0 = initialize_belief(DSABeliefUpdater(P))
 s0 = rand(b0)
-b0.probs = [0.5, 0.5, 0, 0, 0, 0, 0, 0]
+b0.probs = [0.7, 0.4, 0, 0, 0, 0, 0, 0]
 
 N = 1000
 up = BootstrapFilter(P, N, rng)
