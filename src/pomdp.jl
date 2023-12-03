@@ -13,7 +13,7 @@ using Distributions
     time::Int64 = 0
 end
 
-@enum Action WAIT HOSP DSA COIL EMBO SURG
+@enum Action WAIT HOSP DSA COIL EMBO REVC # Revascularisation
 @enum CT CT_POS CT_NEG
 @enum SIRIRAJ SIRIRAJ_LESSNEG1 SIRIRAJ_AROUND0 SIRIRAJ_GREATER1
 
@@ -36,31 +36,31 @@ const Observation = Union{WHObs, DSAObs}
     p_ane::Float64 = 0.0005
     p_occ::Float64 = 0.0002
     
-    p1_ct_true_given_stateindex::Vector{Float64} = [ 0.85, 0.75, 0.75, 0.75, 0.68, 0.68, 0.68, 0.25]
+    p1_ct_true_given_stateindex::Vector{Float64} = [ 0.85, 0.80, 0.70, 0.75, 0.77, 0.75, 0.68, 0.25]
     p1_siriraj_given_stateindex::Vector{Vector{Float64}} = [
-        [0.90, 0.08, 0.02], 
-        [0.7, 0.2, 0.1], 
-        [0.7, 0.2, 0.1], 
-        [0.7, 0.2, 0.1], 
-        [0.5, 0.3, 0.2], 
-        [0.5, 0.3, 0.2], 
-        [0.5, 0.3, 0.2], 
-        [0.15, 0.7, 0.15]
+        [0.04, 0.08, 0.88], 
+        [0.02, 0.08, 0.90], 
+        [0.25, 0.1, 0.65], 
+        [0.08, 0.07, 0.85], 
+        [0.14, 0.08, 0.78], 
+        [0.10, 0.05, 0.85], 
+        [0.85, 0.07, 0.08], 
+        [0.05, 0.90, 0.05]
     ]
-    p2_ct_true_given_stateindex::Vector{Float64} = [ 0.65, 0.65, 0.65, 0.65, 0.58, 0.58, 0.58, 0.35]
+    p2_ct_true_given_stateindex::Vector{Float64} = [ 0.65, 0.60, 0.55, 0.58, 0.55, 0.58, 0.58, 0.35]
     p2_siriraj_given_stateindex::Vector{Vector{Float64}} = [
-        [0.60, 0.28, 0.12], 
-        [0.5, 0.3, 0.2], 
-        [0.5, 0.3, 0.2], 
-        [0.5, 0.3, 0.2], 
-        [0.2, 0.5, 0.3], 
-        [0.2, 0.5, 0.3], 
-        [0.2, 0.5, 0.3], 
+        [0.04, 0.28, 0.68], 
+        [0.02, 0.28, 0.70], 
+        [0.25, 0.3, 0.45], 
+        [0.08, 0.27, 0.65], 
+        [0.14, 0.28, 0.58], 
+        [0.10, 0.25, 0.65], 
+        [0.65, 0.27, 0.08], 
         [0.1, 0.8, 0.1]
     ]
-    p_ane_true_given_stateindex::Vector{Float64} = [ 0.95, 0.95, 0.95, 0.95, 0.05, 0.05, 0.05, 0.05]
-    p_avm_true_given_stateindex::Vector{Float64} = [ 0.95, 0.95, 0.05, 0.05, 0.95, 0.95, 0.05, 0.05]
-    p_occ_true_given_stateindex::Vector{Float64} = [ 0.95, 0.05, 0.95, 0.05, 0.95, 0.05, 0.95, 0.05]
+    p_ane_true_given_stateindex::Vector{Float64} = [ 0.98, 0.98, 0.98, 0.98, 0.05, 0.05, 0.05, 0.05]
+    p_avm_true_given_stateindex::Vector{Float64} = [ 0.98, 0.98, 0.05, 0.05, 0.98, 0.98, 0.05, 0.05]
+    p_occ_true_given_stateindex::Vector{Float64} = [ 0.98, 0.05, 0.98, 0.05, 0.98, 0.05, 0.98, 0.05]
         
     
     max_duration::Int64 = 24
@@ -79,11 +79,11 @@ function POMDPs.states(P::DSAPOMDP)
             for ane in [true, false] for avm in [true, false] for occ in [true, false] for time in 0:P.max_duration]
 end
 
-POMDPs.initialstate(P::DSAPOMDP) = Deterministic(State(ane=true, avm=false, occ=false, time=0))
+POMDPs.initialstate(P::DSAPOMDP) = Deterministic(State(ane=false, avm=false, occ=false, time=0))
 
 
 function POMDPs.actions(P::DSAPOMDP)
-    return [WAIT, HOSP, DSA, COIL, EMBO, SURG]
+    return [WAIT, HOSP, DSA, COIL, EMBO, REVC]
 end
 
 function POMDPs.observations(P::DSAPOMDP)
@@ -118,11 +118,11 @@ function POMDPs.transition(P::DSAPOMDP, s::State, a::Action)
     avm_dist = DiscreteNonParametric([true, false], [p_avm, 1-p_avm])
     occ_dist = DiscreteNonParametric([true, false], [p_occ, 1-p_occ])
     
-    if a == SURG 
+    if a == EMBO 
         avm_dist = DiscreteNonParametric([true, false], [0., 1.])
     elseif a == COIL
-        avm_dist = DiscreteNonParametric([true, false], [0., 1.])
-    elseif a == EMBO 
+        ane_dist = DiscreteNonParametric([true, false], [0., 1.])
+    elseif a == REVC
         occ_dist = DiscreteNonParametric([true, false], [0., 1.])
     end
 
@@ -146,26 +146,29 @@ function POMDPs.reward(P::DSAPOMDP, s::State, a::Action, sp::State)
         return 0
     end
 
-    if a == DSA || a == SURG || a == COIL || a == EMBO
-        r += -100 #costly procedure
+    # Assign rewards based on the action and the current state
+    if a in [REVC, COIL, EMBO]
+        r += -200
+    elseif a == DSA
+        r += -150
+    elseif a == HOSP
+        r += -100
     end
 
-    if a == SURG && !s.avm
-        r += -10000
-    elseif a == SURG && s.avm
-        r += 10000        
-    elseif a == COIL && !s.ane
-        r += -5000
-    elseif a == COIL && s.ane
-        r += 5000
-    elseif a == EMBO && !s.occ
-        r += -5000
-    elseif a == EMBO && s.occ
-        r += 5000
-    elseif a == DSA && !s.ane && !s.avm && !s.occ
-        r += -500
+    if a == EMBO
+        r += s.avm ? 5000 : -5000
+    elseif a == COIL
+        r += s.ane ? 5000 : -5000
+    elseif a == REVC
+        r += s.occ ? 5000 : -5000
+    elseif a == DSA
+        r += (!s.ane && !s.avm && !s.occ) ? -750 : 250
+    elseif a == HOSP
+        r += (!s.ane && !s.avm && !s.occ) ? -400 : 150
+    elseif a == WAIT
+        r += (!s.ane && !s.avm && !s.occ) ? 100 : -1000
     end
-    
+
     return r
 end
 
@@ -179,8 +182,7 @@ function POMDPs.observation(P::DSAPOMDP, a::Action, sp::State)
     state_index = state2stateindex(sp)
 
     # choose obs type for each action type
-    if a in [HOSP, SURG, COIL, EMBO]
-        
+    if a in [HOSP, REVC, COIL, EMBO]
         ct_prob = P.p1_ct_true_given_stateindex[state_index]
         dist_ct = DiscreteNonParametric(
             [0, 1], 
@@ -251,7 +253,7 @@ function POMDPs.gen(P::DSAPOMDP, s::State, a::Action, rng::AbstractRNG)
 
     obs_dist = observation(P, a, sp)  
     obs_array = rand(rng, obs_dist)
-    if a in [WAIT, HOSP, SURG, COIL, EMBO]        
+    if a in [WAIT, HOSP, REVC, COIL, EMBO]        
         o = WHObs(
             ct = CT(Int(obs_array[1])),
             siriraj = SIRIRAJ(Int(obs_array[2]))
@@ -289,7 +291,7 @@ function POMDPs.stateindex(P::DSAPOMDP, s::State)
         return 4
     elseif a == EMBO
         return 5
-    elseif a == SURG
+    elseif a == REVC
         return 6
     end
  end

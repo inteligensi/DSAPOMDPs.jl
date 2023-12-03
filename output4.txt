@@ -1,0 +1,2580 @@
+==========simulation for policy 4 ==========
+states = State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 0
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+
+state_primes = State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+, State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool true
+  time: Int64 -1
+
+observations = WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, DSAObs
+  pred_ane: Bool true
+  pred_avm: Bool true
+  pred_occ: Bool true
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, DSAObs
+  pred_ane: Bool true
+  pred_avm: Bool true
+  pred_occ: Bool true
+, DSAObs
+  pred_ane: Bool true
+  pred_avm: Bool true
+  pred_occ: Bool true
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, DSAObs
+  pred_ane: Bool true
+  pred_avm: Bool true
+  pred_occ: Bool true
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_LESSNEG1
+, DSAObs
+  pred_ane: Bool true
+  pred_avm: Bool true
+  pred_occ: Bool true
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_LESSNEG1
+, DSAObs
+  pred_ane: Bool true
+  pred_avm: Bool true
+  pred_occ: Bool true
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, DSAObs
+  pred_ane: Bool true
+  pred_avm: Bool true
+  pred_occ: Bool true
+
+actions = REVC, REVC, HOSP, REVC, EMBO, DSA, REVC, DSA, DSA, EMBO, HOSP, DSA, REVC, WAIT, DSA, REVC, REVC, EMBO, DSA, HOSP, COIL, EMBO, COIL, DSA
+rsum = 37754.41537147885
+==========simulation for policy 4 ==========
+states = State
+  ane: Bool true
+  avm: Bool true
+  occ: Bool false
+  time: Int64 0
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 1
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 2
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 3
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 4
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 5
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 6
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 7
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 8
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 9
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 10
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 11
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 12
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 13
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 14
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 15
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 16
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 17
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 18
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 19
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 20
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 21
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 22
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 23
+
+state_primes = State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 1
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 2
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 3
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 4
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 5
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 6
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 7
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 8
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 9
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 10
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 11
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 12
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 13
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 14
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 15
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 16
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 17
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 18
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 19
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 20
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 21
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 22
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 23
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 23
+
+observations = WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, DSAObs
+  pred_ane: Bool true
+  pred_avm: Bool false
+  pred_occ: Bool false
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, DSAObs
+  pred_ane: Bool false
+  pred_avm: Bool false
+  pred_occ: Bool false
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_LESSNEG1
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, DSAObs
+  pred_ane: Bool true
+  pred_avm: Bool false
+  pred_occ: Bool false
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_LESSNEG1
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, DSAObs
+  pred_ane: Bool false
+  pred_avm: Bool false
+  pred_occ: Bool false
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+
+actions = EMBO, REVC, REVC, HOSP, DSA, COIL, COIL, COIL, REVC, DSA, WAIT, HOSP, WAIT, EMBO, EMBO, EMBO, HOSP, DSA, COIL, REVC, WAIT, REVC, DSA, WAIT
+rsum = -22237.576077916612
+==========simulation for policy 4 ==========
+states = State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool true
+  time: Int64 0
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool true
+  time: Int64 1
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool true
+  time: Int64 2
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool true
+  time: Int64 3
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool true
+  time: Int64 4
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool true
+  time: Int64 5
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool true
+  time: Int64 6
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool true
+  time: Int64 7
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool true
+  time: Int64 8
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool true
+  time: Int64 9
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool true
+  time: Int64 10
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool true
+  time: Int64 11
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool true
+  time: Int64 12
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool true
+  time: Int64 13
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool true
+  time: Int64 14
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 15
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 16
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 17
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 18
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 19
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 20
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 21
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 22
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 23
+
+state_primes = State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool true
+  time: Int64 1
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool true
+  time: Int64 2
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool true
+  time: Int64 3
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool true
+  time: Int64 4
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool true
+  time: Int64 5
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool true
+  time: Int64 6
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool true
+  time: Int64 7
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool true
+  time: Int64 8
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool true
+  time: Int64 9
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool true
+  time: Int64 10
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool true
+  time: Int64 11
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool true
+  time: Int64 12
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool true
+  time: Int64 13
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool true
+  time: Int64 14
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 15
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 16
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 17
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 18
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 19
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 20
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 21
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 22
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 23
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 23
+
+observations = WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, DSAObs
+  pred_ane: Bool true
+  pred_avm: Bool false
+  pred_occ: Bool true
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_LESSNEG1
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_LESSNEG1
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_LESSNEG1
+, DSAObs
+  pred_ane: Bool false
+  pred_avm: Bool false
+  pred_occ: Bool true
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_LESSNEG1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, DSAObs
+  pred_ane: Bool false
+  pred_avm: Bool false
+  pred_occ: Bool false
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, DSAObs
+  pred_ane: Bool false
+  pred_avm: Bool false
+  pred_occ: Bool false
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+
+actions = EMBO, EMBO, DSA, WAIT, EMBO, EMBO, EMBO, EMBO, HOSP, DSA, WAIT, COIL, COIL, EMBO, REVC, HOSP, DSA, REVC, EMBO, REVC, WAIT, DSA, WAIT, WAIT
+rsum = -34568.06844817765
+==========simulation for policy 4 ==========
+states = State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 0
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 1
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 2
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 3
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 4
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 5
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 6
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 7
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 8
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 9
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 10
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 11
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 12
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 13
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 14
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 15
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 16
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 17
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 18
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 19
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 20
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 21
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 22
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 23
+
+state_primes = State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 1
+, State
+  ane: Bool true
+  avm: Bool false
+  occ: Bool false
+  time: Int64 2
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 3
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 4
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 5
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 6
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 7
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 8
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 9
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 10
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 11
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 12
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 13
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 14
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 15
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 16
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 17
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 18
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 19
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 20
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 21
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 22
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 23
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 23
+
+observations = DSAObs
+  pred_ane: Bool true
+  pred_avm: Bool false
+  pred_occ: Bool false
+, DSAObs
+  pred_ane: Bool true
+  pred_avm: Bool false
+  pred_occ: Bool false
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_LESSNEG1
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, DSAObs
+  pred_ane: Bool false
+  pred_avm: Bool false
+  pred_occ: Bool false
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+
+actions = DSA, DSA, COIL, WAIT, WAIT, REVC, REVC, COIL, COIL, WAIT, EMBO, WAIT, REVC, WAIT, EMBO, WAIT, WAIT, WAIT, DSA, EMBO, COIL, REVC, REVC, COIL
+rsum = -27624.321232047543
+==========simulation for policy 4 ==========
+states = State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool true
+  time: Int64 0
+, State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool true
+  time: Int64 1
+, State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool true
+  time: Int64 2
+, State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool true
+  time: Int64 3
+, State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool true
+  time: Int64 4
+, State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool true
+  time: Int64 5
+, State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool false
+  time: Int64 6
+, State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool false
+  time: Int64 7
+, State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool false
+  time: Int64 8
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 9
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 10
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 11
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 12
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 13
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 14
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 15
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 16
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 17
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 18
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 19
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 20
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 21
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 22
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 23
+
+state_primes = State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool true
+  time: Int64 1
+, State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool true
+  time: Int64 2
+, State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool true
+  time: Int64 3
+, State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool true
+  time: Int64 4
+, State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool true
+  time: Int64 5
+, State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool false
+  time: Int64 6
+, State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool false
+  time: Int64 7
+, State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool false
+  time: Int64 8
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 9
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 10
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 11
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 12
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 13
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 14
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 15
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 16
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 17
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 18
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 19
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 20
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 21
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 22
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 23
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 23
+
+observations = DSAObs
+  pred_ane: Bool false
+  pred_avm: Bool true
+  pred_occ: Bool true
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_LESSNEG1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, DSAObs
+  pred_ane: Bool false
+  pred_avm: Bool true
+  pred_occ: Bool true
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, DSAObs
+  pred_ane: Bool false
+  pred_avm: Bool true
+  pred_occ: Bool false
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, DSAObs
+  pred_ane: Bool false
+  pred_avm: Bool false
+  pred_occ: Bool false
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, DSAObs
+  pred_ane: Bool false
+  pred_avm: Bool false
+  pred_occ: Bool false
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+
+actions = DSA, WAIT, WAIT, DSA, COIL, REVC, DSA, REVC, EMBO, WAIT, REVC, COIL, REVC, WAIT, COIL, DSA, EMBO, DSA, REVC, WAIT, WAIT, REVC, REVC, WAIT
+rsum = -22360.507735368257
+==========simulation for policy 4 ==========
+states = State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool false
+  time: Int64 0
+, State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool false
+  time: Int64 1
+, State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool false
+  time: Int64 2
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 3
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 4
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 5
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 6
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 7
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 8
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 9
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 10
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 11
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 12
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 13
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 14
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 15
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 16
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 17
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 18
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 19
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 20
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 21
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 22
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 23
+
+state_primes = State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool false
+  time: Int64 1
+, State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool false
+  time: Int64 2
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 3
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 4
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 5
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 6
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 7
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 8
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 9
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 10
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 11
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 12
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 13
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 14
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 15
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 16
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 17
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 18
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 19
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 20
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 21
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 22
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 23
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 23
+
+observations = WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_LESSNEG1
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, DSAObs
+  pred_ane: Bool false
+  pred_avm: Bool false
+  pred_occ: Bool false
+, DSAObs
+  pred_ane: Bool false
+  pred_avm: Bool false
+  pred_occ: Bool false
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_LESSNEG1
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+
+actions = HOSP, REVC, EMBO, EMBO, WAIT, COIL, EMBO, REVC, COIL, COIL, HOSP, COIL, EMBO, REVC, EMBO, COIL, DSA, DSA, EMBO, HOSP, WAIT, REVC, REVC, HOSP
+rsum = -43418.618013713356
+==========simulation for policy 4 ==========
+states = State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool true
+  time: Int64 0
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool true
+  time: Int64 1
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool true
+  time: Int64 2
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool true
+  time: Int64 3
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool true
+  time: Int64 4
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool true
+  time: Int64 5
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool true
+  time: Int64 6
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 7
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 8
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 9
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 10
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 11
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 12
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 13
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 14
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 15
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 16
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 17
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 18
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 19
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 20
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 21
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 22
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 23
+
+state_primes = State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool true
+  time: Int64 1
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool true
+  time: Int64 2
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool true
+  time: Int64 3
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool true
+  time: Int64 4
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool true
+  time: Int64 5
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool true
+  time: Int64 6
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 7
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 8
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 9
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 10
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 11
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 12
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 13
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 14
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 15
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 16
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 17
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 18
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 19
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 20
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 21
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 22
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 23
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 23
+
+observations = WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_LESSNEG1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_LESSNEG1
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_LESSNEG1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_LESSNEG1
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_LESSNEG1
+, DSAObs
+  pred_ane: Bool false
+  pred_avm: Bool false
+  pred_occ: Bool true
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, DSAObs
+  pred_ane: Bool false
+  pred_avm: Bool false
+  pred_occ: Bool false
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, DSAObs
+  pred_ane: Bool false
+  pred_avm: Bool false
+  pred_occ: Bool false
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, DSAObs
+  pred_ane: Bool false
+  pred_avm: Bool false
+  pred_occ: Bool true
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+
+actions = EMBO, EMBO, HOSP, EMBO, WAIT, DSA, REVC, EMBO, REVC, EMBO, DSA, HOSP, WAIT, COIL, COIL, DSA, REVC, EMBO, REVC, DSA, COIL, WAIT, EMBO, COIL
+rsum = -40490.54520681548
+==========simulation for policy 4 ==========
+states = State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 0
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 1
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 2
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 3
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 4
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 5
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 6
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 7
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 8
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 9
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 10
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 11
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 12
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 13
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 14
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 15
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 16
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 17
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 18
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 19
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 20
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 21
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 22
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 23
+
+state_primes = State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 1
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 2
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 3
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 4
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 5
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 6
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 7
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 8
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 9
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 10
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 11
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 12
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 13
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 14
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 15
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 16
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 17
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 18
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 19
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 20
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 21
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 22
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 23
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 23
+
+observations = DSAObs
+  pred_ane: Bool false
+  pred_avm: Bool false
+  pred_occ: Bool false
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, DSAObs
+  pred_ane: Bool false
+  pred_avm: Bool false
+  pred_occ: Bool false
+, DSAObs
+  pred_ane: Bool false
+  pred_avm: Bool true
+  pred_occ: Bool false
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, DSAObs
+  pred_ane: Bool false
+  pred_avm: Bool false
+  pred_occ: Bool false
+, DSAObs
+  pred_ane: Bool false
+  pred_avm: Bool false
+  pred_occ: Bool false
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, DSAObs
+  pred_ane: Bool false
+  pred_avm: Bool false
+  pred_occ: Bool false
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, DSAObs
+  pred_ane: Bool false
+  pred_avm: Bool false
+  pred_occ: Bool true
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+
+actions = DSA, WAIT, WAIT, WAIT, EMBO, REVC, HOSP, WAIT, COIL, COIL, DSA, DSA, REVC, DSA, DSA, EMBO, DSA, REVC, WAIT, DSA, WAIT, REVC, EMBO, COIL
+rsum = -30969.52536702254
