@@ -23,12 +23,12 @@ export
     hello_world,
     state2stateindex,
     compute_rdisc,
-    state_sub2ind
+    state_sub2ind,
+    evaluate_policies_replication,
+    evaluate_policies
 
 
 include("functions.jl")
-
-
 
 
 end # module DSAPOMDPs
