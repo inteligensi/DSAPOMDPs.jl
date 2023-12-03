@@ -11,11 +11,5 @@ include("main.jl")
 π_random = RandomPolicy(P)
 
 policies = [π_pomcp, π_despot, π_random]
-means, stds, t_means, t_stds = evaluate_policies_replication(hr, P, policies, up, b0, n_reps, max_steps)
-
-file_path = "output-rdisc-time-rep.txt"
-file = open(file_path, "w")
-println(file, "means = $(means)")
-println(file, "stds = $(stds)")
-println(file, "t_means = $(t_means)")
-println(file, "t_stds = $(t_stds)")
+# means, stds, t_means, t_stds = evaluate_policies_replication(hr, P, policies, up, b0, n_reps, max_steps)
+evaluate_policies(hr, P, policies, up, b0, max_steps)

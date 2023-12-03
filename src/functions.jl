@@ -151,3 +151,40 @@ function state_sub2ind(dims::Tuple, i1, i2, i3, i4)
     t_stds = std(times, dims=2)
     return (means=means, stds=stds, t_means=t_means, t_stds=t_stds)
 end
+
+function evaluate_policies(sim, pomdp, policies, up, b0, max_steps)
+    results = Array{Float64}(undef, length(policies))
+    times = Array{Float64}(undef, length(policies))
+
+    s0 = rand(initialstate(pomdp))
+    @show s0
+    for (j, policy) in enumerate(policies)
+        file_path = "output-$(j).txt"
+        if isfile(file_path)
+            file = open(file_path, "a")
+        else
+            file = open(file_path, "w")
+        end
+
+        h_policy = simulate(sim, pomdp, policy, up, b0, s0)
+
+        results[j], actions, states, state_primes, observations, times[j] = compute_rdisc(pomdp, h_policy)
+        println("==========simulation for policy $j ==========")
+        println("states = $(join([s for s in states], ", "))")
+        println("state_primes = $(join([sp for sp in state_primes], ", "))")
+        println("observations = $(join([o for o in observations], ", "))")
+        println("actions = $(join([a isa Symbol ? String(a)[11:end] : a for a in actions], ", "))")
+        println("rsum = $(results[j])")
+        println("times = $(times[j])")
+
+        println(file, "==========simulation for policy $j ==========")
+        println(file, "states = $(join([s for s in states], ", "))")
+        println(file, "state_primes = $(join([sp for sp in state_primes], ", "))")
+        println(file, "observations = $(join([o for o in observations], ", "))")
+        println(file, "actions = $(join([a isa Symbol ? String(a)[11:end] : a for a in actions], ", "))")
+        println(file, "rsum = $(results[j])")
+        println(file, "times = $(times[j])")
+
+        close(file)
+    end
+end
