@@ -79,7 +79,7 @@ function POMDPs.states(P::DSAPOMDP)
             for ane in [true, false] for avm in [true, false] for occ in [true, false] for time in 0:P.max_duration]
 end
 
-POMDPs.initialstate(P::DSAPOMDP) = Deterministic(State(ane=false, avm=false, occ=false, time=0))
+POMDPs.initialstate(P::DSAPOMDP) = Deterministic(State(ane=true, avm=false, occ=false, time=0))
 
 
 function POMDPs.actions(P::DSAPOMDP)
@@ -233,7 +233,19 @@ function POMDPs.initialize_belief(up)
     P = up.predict_model
     all_support = [states(P)...]
     support = [state for state in all_support if state.time == 0]
-    probs = fill(1/length(support), length(support))      
+    probs = fill(1/length(support), length(support))
+    for i in eachindex(probs)
+        countTrue = 1 * support[i].ane + 1 * support[i].avm + 1 * support[i].occ
+        if countTrue == 0
+            probs[i] = 0.785
+        elseif countTrue == 1
+            probs[i] = 0.05
+        elseif countTrue == 2
+            probs[i] = 0.02
+        elseif countTrue == 3
+            probs[i] = 0.005
+        end
+    end 
     return SparseCat(support, probs)
 end
 

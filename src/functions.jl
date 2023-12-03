@@ -71,27 +71,28 @@ function compute_rdisc(P, h)
     states = []
     state_primes = []
     observations = []
-    times = 24
+    times = 0
+    t = 0
     isRecover = false
+    needToRecover = false
     for step in eachstep(h)
+        t += 1
         rsum += (step.r * disc)
         disc *= discount(P)
         push!(actions, step.a)
         push!(states, step.s)
-        if hasproperty(step, :o)  # Check if the 'o' field exists in the step object
-            push!(observations, step.o)
-            push!(state_primes, step.sp)
-            if !step.sp.ane && !step.sp.avm && !step.sp.occ && !isRecover
-                times = step.sp.time
-                isRecover = true
-            end
-        else
-            sp = rand(step.sp)
-            push!(state_primes, sp)
-            if !sp.ane && !sp.avm && !sp.occ && !isRecover
-                times = sp.time
-                isRecover = true
-            end
+        push!(observations, step.o)
+        push!(state_primes, step.sp)
+
+        # Check if patient needs to be recovered
+        if !needToRecover && t == 1 && (step.s.ane || step.s.avm || step.s.occ)
+            needToRecover = true
+        end
+
+        # Check if patient has been recovered
+        if !step.sp.ane && !step.sp.avm && !step.sp.occ && !isRecover && needToRecover
+            times = step.sp.time
+            isRecover = true
         end
     end
 
@@ -114,19 +115,14 @@ function state_sub2ind(dims::Tuple, i1, i2, i3, i4)
         s0 = rand(b0)
         @show s0
         for (j, policy) in enumerate(policies)
-            file_path = "output-2-rep$(j).txt"
+            file_path = "output-rep-$(j).txt"
             if isfile(file_path)
                 file = open(file_path, "a")
             else
                 file = open(file_path, "w")
             end
 
-            if j == 3
-                mdp = GenerativeBeliefMDP(pomdp, up)
-                h_policy = simulate(sim, mdp, policy)
-            else
-                h_policy = simulate(sim, pomdp, policy, up, b0, s0)
-            end
+            h_policy = simulate(sim, pomdp, policy, up, b0, s0)
 
             results[j, i], actions, states, state_primes, observations, times[j, i] = compute_rdisc(pomdp, h_policy)
             println("==========simulation $i for policy $j ==========")
@@ -154,46 +150,4 @@ function state_sub2ind(dims::Tuple, i1, i2, i3, i4)
     t_means = mean(times, dims=2)
     t_stds = std(times, dims=2)
     return (means=means, stds=stds, t_means=t_means, t_stds=t_stds)
-end
- 
-function evaluate_policies(sim, pomdp, policies, up, b0, max_steps)
-    results = Array{Float64}(undef, length(policies))
-    times = Array{Float64}(undef, length(policies))
-
-    s0 = rand(initialstate(pomdp))
-    @show s0
-    for (j, policy) in enumerate(policies)
-        file_path = "output$(j).txt"
-        if isfile(file_path)
-            file = open(file_path, "a")
-        else
-            file = open(file_path, "w")
-        end
-
-        if j == 3
-            mdp = GenerativeBeliefMDP(pomdp, up)
-            h_policy = simulate(sim, mdp, policy)
-        else
-            h_policy = simulate(sim, pomdp, policy, up, b0, s0)
-        end
-
-        results[j], actions, states, state_primes, observations, times[j] = compute_rdisc(pomdp, h_policy)
-        println("==========simulation for policy $j ==========")
-        println("states = $(join([s for s in states], ", "))")
-        println("state_primes = $(join([sp for sp in state_primes], ", "))")
-        println("observations = $(join([o for o in observations], ", "))")
-        println("actions = $(join([a isa Symbol ? String(a)[11:end] : a for a in actions], ", "))")
-        println("rsum = $(results[j])")
-        println("times = $(times[j])")
-
-        println(file, "==========simulation for policy $j ==========")
-        println(file, "states = $(join([s for s in states], ", "))")
-        println(file, "state_primes = $(join([sp for sp in state_primes], ", "))")
-        println(file, "observations = $(join([o for o in observations], ", "))")
-        println(file, "actions = $(join([a isa Symbol ? String(a)[11:end] : a for a in actions], ", "))")
-        println(file, "rsum = $(results[j])")
-        println(file, "times = $(times[j])")
-
-        close(file)
-    end
 end
