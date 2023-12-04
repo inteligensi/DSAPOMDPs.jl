@@ -25,14 +25,17 @@ y_ticks = range(y_min, y_max, length=5)
 p = plot(
     layout = (2, 2), 
     size = (700, 400),
-    right_margin = 8mm)
+    right_margin = 8mm, 
+    left_margin = 3mm,
+    bottom_margin = 3mm)
 
 for (i, pol_name) in enumerate(policy_names)
     histogram!(p[i], df[rows_needs_treatment, "time2recover_$pol_name"], bins=bins, normed=true, 
-             minorgrid=true, xlim=(min_val, max_val), xticks=x_ticks, ylim=(y_min, y_max), title=pol_name, legend=false)
+             minorgrid=true, xlim=(min_val, max_val), xticks=x_ticks, ylim=(y_min, y_max), title=pol_name, legend=false, 
+             xlabel="Decision epoch", ylabel="Normalized density")
 end
 
 # Display the plot
 plt = plot(p)
-savefig(plt, "outputs/hist_time2recover.pdf")
+savefig(plt, "outputs/hist_time2recover.png")
 

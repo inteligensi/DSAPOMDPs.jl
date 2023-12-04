@@ -2,6 +2,7 @@ using ParticleFilters
 using DSAPOMDPs
 using DataFrames
 using Plots
+using Plots.PlotMeasures
 
 function hello_world()
     return "Hello World!"

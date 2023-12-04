@@ -3,6 +3,7 @@ using ARDESPOT
 using DataFrames
 using CSV
 using Plots
+using Plots.PlotMeasures
 
 include("main.jl")
 
@@ -15,11 +16,11 @@ include("main.jl")
 policies = [π_pomcp, π_despot, π_random, π_dsa, π_hosp]
 π_names = ["POMCP", "DESPOT", "Random", "ExpertDSA", "ExpertHOSP"]
 
-s0 = states(P)[101]
+s0 = states(P)[76]
 hist = simulate(hr, P, π_pomcp, up, b0, s0);
 
-# t=5
-# plt = plot_belief_hist(hist, t)
+t=4
+plt = plot_belief_hist(hist, t)
 # savefig("outputs/despot_belief_hist_$(t).pdf")
 
 @gif for (i, b) in enumerate(belief_hist(hist))

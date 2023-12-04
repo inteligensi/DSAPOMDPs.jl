@@ -1,0 +1,12 @@
+s0 = State(ane=false, avm=true, occ=true)
+Random = (HOSP, EMBO, DSA, WAIT, EMBO, HOSP, COIL, REVC, WAIT, EMBO, WAIT, COIL, DSA, COIL, COIL, HOSP, DISC)
+ExpertHOSP = (HOSP, HOSP, HOSP, EMBO, REVC, DISC)
+ExpertDSA = (DSA, EMBO, REVC, DISC)
+DESPOT = (WAIT, HOSP, REVC, HOSP, EMBO, DISC)
+
+s0 = State(ane=true, avm=false, occ=false)
+Random = (REVC, COIL, WAIT, DSA, DSA, DSA, HOSP, REVC, WAIT, REVC, WAIT, DSA, REVC, WAIT, HOSP, DISC)
+ExpertHOSP = (HOSP, COIL, DISC)
+ExpertDSA = (DSA, DSA, COIL, DISC)
+DESPOT = (WAIT, COIL, WAIT, WAIT, WAIT, DISC)
+
