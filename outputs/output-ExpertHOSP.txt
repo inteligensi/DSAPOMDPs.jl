@@ -1,0 +1,167 @@
+==========simulation for policy ExpertHOSP ==========
+states = State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool true
+  time: Int64 0
+, State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool true
+  time: Int64 1
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool true
+  time: Int64 2
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 3
+
+state_primes = State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool true
+  time: Int64 1
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool true
+  time: Int64 2
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 3
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 -99
+
+observations = WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_LESSNEG1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+
+actions = HOSP, EMBO, REVC, DISC
+rsum = 13228.875
+duration = 3.0
+is_treated = true
+==========simulation for policy ExpertHOSP ==========
+states = State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool true
+  time: Int64 0
+, State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool true
+  time: Int64 1
+, State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool true
+  time: Int64 2
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool true
+  time: Int64 3
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 4
+
+state_primes = State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool true
+  time: Int64 1
+, State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool true
+  time: Int64 2
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool true
+  time: Int64 3
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 4
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 -99
+
+observations = WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_GREATER1
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_LESSNEG1
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+
+actions = HOSP, HOSP, EMBO, REVC, DISC
+rsum = 12617.43125
+duration = 4.0
+is_treated = true
+==========simulation for policy ExpertHOSP ==========
+states = State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool true
+  time: Int64 0
+, State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool true
+  time: Int64 1
+
+state_primes = State
+  ane: Bool false
+  avm: Bool true
+  occ: Bool true
+  time: Int64 1
+, State
+  ane: Bool false
+  avm: Bool false
+  occ: Bool false
+  time: Int64 -99
+
+observations = WHObs
+  ct: CT DSAPOMDPs.CT_POS
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+, WHObs
+  ct: CT DSAPOMDPs.CT_NEG
+  siriraj: SIRIRAJ DSAPOMDPs.SIRIRAJ_AROUND0
+
+actions = HOSP, DISC
+rsum = -47450.0
+duration = 24.0
+is_treated = false

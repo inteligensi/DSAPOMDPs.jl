@@ -3,8 +3,6 @@ using POMDPTools
 using Parameters
 using Random
 using Distributions
-# using BeliefUpdaters
-# using StatsBase
 
 @with_kw mutable struct State
     ane::Bool = false
@@ -13,7 +11,7 @@ using Distributions
     time::Int64 = 0
 end
 
-@enum Action WAIT HOSP DSA COIL EMBO REVC # Revascularisation
+@enum Action WAIT HOSP DSA COIL EMBO REVC DISC # REVC: Revascularisation, DISC: Discharge patient
 @enum CT CT_POS CT_NEG
 @enum SIRIRAJ SIRIRAJ_LESSNEG1 SIRIRAJ_AROUND0 SIRIRAJ_GREATER1
 
@@ -62,17 +60,27 @@ const Observation = Union{WHObs, DSAObs}
     p_avm_true_given_stateindex::Vector{Float64} = [ 0.98, 0.98, 0.05, 0.05, 0.98, 0.98, 0.05, 0.05]
     p_occ_true_given_stateindex::Vector{Float64} = [ 0.98, 0.05, 0.98, 0.05, 0.98, 0.05, 0.98, 0.05]
         
-    
     max_duration::Int64 = 24
     discount::Float64 = 0.95
+
     null_state::State = State(
         ane = true,
         avm = true,
         occ = true,
         time = -1
     )
+
+    discharge_state::State = State(
+        ane = false,
+        avm = false,
+        occ = false,
+        time = -99
+    )
 end
 
+Base.:(==)(s1::State, s2::State) = s1.ane == s2.ane && s1.avm == s2.avm && s1.occ == s2.occ && s1.time == s2.time
+
+POMDPs.isterminal(P::DSAPOMDP, s::State) = (s == P.null_state) || (s == P.discharge_state)
 
 function POMDPs.states(P::DSAPOMDP)
     return [State(ane, avm, occ, time)
@@ -83,7 +91,7 @@ POMDPs.initialstate(P::DSAPOMDP) = Deterministic(State(ane=true, avm=false, occ=
 
 
 function POMDPs.actions(P::DSAPOMDP)
-    return [WAIT, HOSP, DSA, COIL, EMBO, REVC]
+    return [WAIT, HOSP, DSA, COIL, EMBO, REVC, DISC]
 end
 
 function POMDPs.observations(P::DSAPOMDP)
@@ -106,8 +114,17 @@ function POMDPs.obsindex(P::DSAPOMDP, obs::Union{WHObs, DSAObs})
 end
 
 function POMDPs.transition(P::DSAPOMDP, s::State, a::Action)
-    if isterminal(P, s) || s.time >= (P.max_duration - 1) || (s.ane && s.avm && s.occ)
+    if isterminal(P, s) 
+        return Deterministic(s)
+    end
+
+    #transition to the null state by the end of time P.max_duration or when the patient has all three conditions
+    if s.time >= (P.max_duration - 1) || (s.ane && s.avm && s.occ)
         return Deterministic(P.null_state)
+    end
+
+    if a == DISC
+        return Deterministic(P.discharge_state)
     end
 
     p_ane = s.ane ? 1. : P.p_ane
@@ -140,8 +157,8 @@ function POMDPs.reward(P::DSAPOMDP, s::State, a::Action, sp::State)
 
     r = 0
 
-    if !isterminal(P, s) && isterminal(P, sp)
-        r += -100000 # Huge penalty for first time entering terminal state
+    if s != P.null_state && sp == P.null_state
+        r += -100000 # Huge penalty for first time entering null state
     elseif isterminal(P, s)
         return 0
     end
@@ -167,6 +184,8 @@ function POMDPs.reward(P::DSAPOMDP, s::State, a::Action, sp::State)
         r += (!s.ane && !s.avm && !s.occ) ? -400 : 150
     elseif a == WAIT
         r += (!s.ane && !s.avm && !s.occ) ? 100 : -1000
+    elseif a == DISC
+        r += (!s.ane && !s.avm && !s.occ) ? 5000 : -50000
     end
 
     return r
@@ -182,7 +201,7 @@ function POMDPs.observation(P::DSAPOMDP, a::Action, sp::State)
     state_index = state2stateindex(sp)
 
     # choose obs type for each action type
-    if a in [HOSP, REVC, COIL, EMBO]
+    if a in [HOSP, REVC, COIL, EMBO, DISC]
         ct_prob = P.p1_ct_true_given_stateindex[state_index]
         dist_ct = DiscreteNonParametric(
             [0, 1], 
@@ -260,12 +279,17 @@ function POMDPs.gen(P::DSAPOMDP, s::State, a::Action, rng::AbstractRNG)
             sp = sp_array
         else             
             sp = State(ane=sp_array[1], avm=sp_array[2], occ=sp_array[3], time=sp_array[4])
-        end        
+        end                
     end
+
+    # #transition to discharge state if the patient has been fully treated, if prior has not
+    # if state2stateindex(sp) == 8 || state2stateindex(s) in [4, 6, 7]
+    #     sp = P.discharge_state
+    # end
 
     obs_dist = observation(P, a, sp)  
     obs_array = rand(rng, obs_dist)
-    if a in [WAIT, HOSP, REVC, COIL, EMBO]        
+    if a in [WAIT, HOSP, REVC, COIL, EMBO, DISC]        
         o = WHObs(
             ct = CT(Int(obs_array[1])),
             siriraj = SIRIRAJ(Int(obs_array[2]))
