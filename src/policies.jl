@@ -13,7 +13,6 @@ end
 
 function base_policy(P::DSAPOMDP, b; idx_a_default=2, min_rate=0.6, min_case_discharge_prob=0.9)
     #use belief with the highest prob for making accept/discharge decision
-
     prob = particle2prob(b)
     k = keymax(prob)    
 
@@ -24,7 +23,7 @@ function base_policy(P::DSAPOMDP, b; idx_a_default=2, min_rate=0.6, min_case_dis
     else
         #perform treatment based on the condition with the dominant rate (≥ min_rate)
         #if no dominant rate, perform default action (idx_a_default)
-        rates = calc_condition_rate(b) # rates is a Dict{String, Float64} with keys "ane", "avm", "occ"
+        rates = calc_condition_rate(b) #rates is a Dict{String, Float64} with keys "ane", "avm", "occ"
         argmax_ = keymax(rates)
         max_rate = rates[argmax_]
 
@@ -40,13 +39,10 @@ function base_policy(P::DSAPOMDP, b; idx_a_default=2, min_rate=0.6, min_case_dis
             end
         end
     end
-    
 end
-
 
 @with_kw mutable struct DSAPolicy <: Policy P::DSAPOMDP end
 POMDPs.action(policy::DSAPolicy, b::ParticleCollection{State}) = base_policy(policy.P, b, idx_a_default=3)
-
 
 @with_kw mutable struct HOSPPolicy <: Policy P::DSAPOMDP end
 POMDPs.action(policy::HOSPPolicy, b::ParticleCollection{State}) = base_policy(policy.P, b, idx_a_default=2)

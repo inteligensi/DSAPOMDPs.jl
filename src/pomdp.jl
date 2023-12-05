@@ -5,13 +5,14 @@ using Random
 using Distributions
 
 @with_kw mutable struct State
-    ane::Bool = false
-    avm::Bool = false
-    occ::Bool = false
-    time::Int64 = 0
+    ane::Bool = false #aneurysm
+    avm::Bool = false #arteriovenous malformations
+    occ::Bool = false #occlusion
+    time::Int64 = 0 #current time
 end
 
-@enum Action WAIT HOSP DSA COIL EMBO REVC DISC # REVC: Revascularisation, DISC: Discharge patient
+#HOSP: Hospitalize, DSA: Digital Subtraction Angiography, COIL: Coiling, EMBO: Embolization, REVC: Revascularisation, DISC: Discharge patient
+@enum Action WAIT HOSP DSA COIL EMBO REVC DISC
 @enum CT CT_POS CT_NEG
 @enum SIRIRAJ SIRIRAJ_LESSNEG1 SIRIRAJ_AROUND0 SIRIRAJ_GREATER1
 
@@ -29,7 +30,6 @@ end
 const Observation = Union{WHObs, DSAObs}
 
 @with_kw mutable struct DSAPOMDP <: POMDP{State, Action, Observation}
-
     p_avm::Float64 = 0.0002
     p_ane::Float64 = 0.0005
     p_occ::Float64 = 0.0002
@@ -88,7 +88,6 @@ function POMDPs.states(P::DSAPOMDP)
 end
 
 POMDPs.initialstate(P::DSAPOMDP) = Deterministic(State(ane=true, avm=false, occ=false, time=0))
-
 
 function POMDPs.actions(P::DSAPOMDP)
     return [WAIT, HOSP, DSA, COIL, EMBO, REVC, DISC]
@@ -154,16 +153,15 @@ function POMDPs.transition(P::DSAPOMDP, s::State, a::Action)
 end
 
 function POMDPs.reward(P::DSAPOMDP, s::State, a::Action, sp::State)
-
     r = 0
 
     if s != P.null_state && sp == P.null_state
-        r += -100000 # Huge penalty for first time entering null state
+        r += -100000 #Huge penalty for first time entering null state
     elseif isterminal(P, s)
         return 0
     end
 
-    # Assign rewards based on the action and the current state
+    #Assign rewards based on the action and the current state
     if a in [REVC, COIL, EMBO]
         r += -200
     elseif a == DSA
@@ -191,16 +189,14 @@ function POMDPs.reward(P::DSAPOMDP, s::State, a::Action, sp::State)
     return r
 end
 
-
 function POMDPs.discount(P::DSAPOMDP)
     return P.discount
 end
 
 function POMDPs.observation(P::DSAPOMDP, a::Action, sp::State)
-    
     state_index = state2stateindex(sp)
 
-    # choose obs type for each action type
+    #choose obs type for each action type
     if a in [HOSP, REVC, COIL, EMBO, DISC]
         ct_prob = P.p1_ct_true_given_stateindex[state_index]
         dist_ct = DiscreteNonParametric(
@@ -243,7 +239,6 @@ function POMDPs.observation(P::DSAPOMDP, a::Action, sp::State)
         return product_distribution(ane_true_dist, avm_true_dist, occ_true_dist)
 
     end
-
 end
 
 
@@ -282,11 +277,6 @@ function POMDPs.gen(P::DSAPOMDP, s::State, a::Action, rng::AbstractRNG)
         end                
     end
 
-    # #transition to discharge state if the patient has been fully treated, if prior has not
-    # if state2stateindex(sp) == 8 || state2stateindex(s) in [4, 6, 7]
-    #     sp = P.discharge_state
-    # end
-
     obs_dist = observation(P, a, sp)  
     obs_array = rand(rng, obs_dist)
     if a in [WAIT, HOSP, REVC, COIL, EMBO, DISC]        
@@ -311,7 +301,7 @@ function POMDPs.stateindex(P::DSAPOMDP, s::State)
     ane_idx = s.ane ? 1 : 2
     avm_idx = s.avm ? 1 : 2
     occ_idx = s.occ ? 1 : 2
-    time_idx = s.time + 1  # 0-based to 1-based
+    time_idx = s.time + 1  #0-based to 1-based
  
     return state_sub2ind((2, 2, 2, P.max_duration + 1), ane_idx, avm_idx, occ_idx, time_idx)
  end

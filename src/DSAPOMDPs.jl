@@ -20,7 +20,6 @@ include("pomdp.jl")
 
 
 export 
-    hello_world,
     particle2prob,
     keymax,
     summarize_rollout,
@@ -28,7 +27,6 @@ export
     stateindex2string,
     compute_rdisc,
     state_sub2ind,
-    evaluate_policies_replication,
     evaluate_policies,
     replicate_policy_eval,
     dict2df,

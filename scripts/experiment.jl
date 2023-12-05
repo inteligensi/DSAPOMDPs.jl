@@ -13,7 +13,6 @@ include("main.jl")
 
 policies = [π_pomcp, π_despot, π_random, π_dsa, π_hosp]
 π_names = ["POMCP", "DESPOT", "Random", "ExpertDSA", "ExpertHOSP"]
-# means, stds, t_means, t_stds = evaluate_policies_replication(hr, P, policies, up, b0, n_reps, max_steps)
 s0 = states(P)[76]
 rs, ttrs, hcs = evaluate_policies(hr, P, policies, up, b0, s0, pol_names = π_names, save_to_file=true)
 
