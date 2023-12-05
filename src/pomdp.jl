@@ -16,11 +16,13 @@ end
 @enum CT CT_POS CT_NEG
 @enum SIRIRAJ SIRIRAJ_LESSNEG1 SIRIRAJ_AROUND0 SIRIRAJ_GREATER1
 
+#Observation struct with WAIT and HOSP action
 @with_kw mutable struct WHObs
     ct::CT
     siriraj::SIRIRAJ
 end
 
+#Observation struct with DSA action
 @with_kw mutable struct DSAObs
     pred_ane::Bool
     pred_avm::Bool
@@ -30,11 +32,14 @@ end
 const Observation = Union{WHObs, DSAObs}
 
 @with_kw mutable struct DSAPOMDP <: POMDP{State, Action, Observation}
+    #probability of each part of state became true with non-treatment action 
     p_avm::Float64 = 0.0002
     p_ane::Float64 = 0.0005
     p_occ::Float64 = 0.0002
     
+    #probability of ct scan is true given state with action [HOSP, REVC, COIL, EMBO, DISC]
     p1_ct_true_given_stateindex::Vector{Float64} = [ 0.85, 0.80, 0.70, 0.75, 0.77, 0.75, 0.68, 0.25]
+    #probability of siriraj score = [x<=-1, -1<x<1, x>=1] given state with action [HOSP, REVC, COIL, EMBO, DISC]
     p1_siriraj_given_stateindex::Vector{Vector{Float64}} = [
         [0.04, 0.08, 0.88], 
         [0.02, 0.08, 0.90], 
@@ -45,7 +50,10 @@ const Observation = Union{WHObs, DSAObs}
         [0.85, 0.07, 0.08], 
         [0.05, 0.90, 0.05]
     ]
+    
+    #probability of ct scan is true given state with action [WAIT]
     p2_ct_true_given_stateindex::Vector{Float64} = [ 0.65, 0.60, 0.55, 0.58, 0.55, 0.58, 0.58, 0.35]
+    #probability of siriraj score = [x<=-1, -1<x<1, x>=1] given state with action [WAIT]
     p2_siriraj_given_stateindex::Vector{Vector{Float64}} = [
         [0.04, 0.28, 0.68], 
         [0.02, 0.28, 0.70], 
@@ -56,6 +64,8 @@ const Observation = Union{WHObs, DSAObs}
         [0.65, 0.27, 0.08], 
         [0.1, 0.8, 0.1]
     ]
+
+    #probability of each part of state become true given state
     p_ane_true_given_stateindex::Vector{Float64} = [ 0.98, 0.98, 0.98, 0.98, 0.05, 0.05, 0.05, 0.05]
     p_avm_true_given_stateindex::Vector{Float64} = [ 0.98, 0.98, 0.05, 0.05, 0.98, 0.98, 0.05, 0.05]
     p_occ_true_given_stateindex::Vector{Float64} = [ 0.98, 0.05, 0.98, 0.05, 0.98, 0.05, 0.98, 0.05]
@@ -82,6 +92,7 @@ Base.:(==)(s1::State, s2::State) = s1.ane == s2.ane && s1.avm == s2.avm && s1.oc
 
 POMDPs.isterminal(P::DSAPOMDP, s::State) = (s == P.null_state) || (s == P.discharge_state)
 
+#State space
 function POMDPs.states(P::DSAPOMDP)
     return [State(ane, avm, occ, time)
             for ane in [true, false] for avm in [true, false] for occ in [true, false] for time in 0:P.max_duration]
@@ -89,10 +100,12 @@ end
 
 POMDPs.initialstate(P::DSAPOMDP) = Deterministic(State(ane=true, avm=false, occ=false, time=0))
 
+#Action space
 function POMDPs.actions(P::DSAPOMDP)
     return [WAIT, HOSP, DSA, COIL, EMBO, REVC, DISC]
 end
 
+#Observation space
 function POMDPs.observations(P::DSAPOMDP)
     WHObs_space = [WHObs(ct, siriraj) for ct in [CT_POS, CT_NEG] for siriraj in [SIRIRAJ_LESSNEG1, SIRIRAJ_AROUND0, SIRIRAJ_GREATER1]]
     DSAObs_space = [DSAObs(pred_ane, pred_avm, pred_occ) for pred_ane in [true, false] for pred_avm in [true, false] for pred_occ in [true, false]]
@@ -112,6 +125,7 @@ function POMDPs.obsindex(P::DSAPOMDP, obs::Union{WHObs, DSAObs})
     end
 end
 
+#Transition function
 function POMDPs.transition(P::DSAPOMDP, s::State, a::Action)
     if isterminal(P, s) 
         return Deterministic(s)
@@ -152,6 +166,7 @@ function POMDPs.transition(P::DSAPOMDP, s::State, a::Action)
     return dist
 end
 
+#Reward function
 function POMDPs.reward(P::DSAPOMDP, s::State, a::Action, sp::State)
     r = 0
 
@@ -170,6 +185,7 @@ function POMDPs.reward(P::DSAPOMDP, s::State, a::Action, sp::State)
         r += -100
     end
 
+    #impose penalties for mismatch and rewards for matching cases
     if a == EMBO
         r += s.avm ? 5000 : -5000
     elseif a == COIL
@@ -193,6 +209,7 @@ function POMDPs.discount(P::DSAPOMDP)
     return P.discount
 end
 
+#Observation Model
 function POMDPs.observation(P::DSAPOMDP, a::Action, sp::State)
     state_index = state2stateindex(sp)
 
@@ -250,6 +267,11 @@ function POMDPs.initialize_belief(up)
     probs = fill(1/length(support), length(support))
     for i in eachindex(probs)
         countTrue = 1 * support[i].ane + 1 * support[i].avm + 1 * support[i].occ
+        #distribution over the state space
+        #   0.785 with stroke-free conditions
+        #   0.05 with only one stroke condition (either aneurysm, AVM, or occlusion
+        #   0.02 with two combinations
+        #   0.005 with all the conditions
         if countTrue == 0
             probs[i] = 0.785
         elseif countTrue == 1
