@@ -3,6 +3,7 @@ using POMDPs
 using POMDPTools
 using Random
 using Distributions
+rng = MersenneTwister(123)
 
 include("../src/pomdp.jl")
 include("../src/functions.jl")
@@ -34,25 +35,25 @@ include("../src/functions.jl")
 
     @testset "Transition Function" begin
         s = State(false, false, false, 0)
-        sp = rand(transition(pomdp, s, WAIT))
+        sp = rand(rng, transition(pomdp, s, WAIT))
         @test sp[4] == 1
         
         s_terminal = State(true, true, true, pomdp.max_duration)
-        sp_terminal = rand(transition(pomdp, s_terminal, WAIT))
+        sp_terminal = rand(rng, transition(pomdp, s_terminal, WAIT))
         @test sp_terminal == pomdp.null_state
 
         s_discharge = State(false, false, false, 5)
-        sp_discharge = rand(transition(pomdp, s_discharge, DISC))
+        sp_discharge = rand(rng, transition(pomdp, s_discharge, DISC))
         @test sp_discharge == pomdp.discharge_state
 
         # Edge case: transition from max_duration to null_state
         s_max = State(false, false, false, pomdp.max_duration)
-        sp_max = rand(transition(pomdp, s_max, WAIT))
+        sp_max = rand(rng, transition(pomdp, s_max, WAIT))
         @test sp_max == pomdp.null_state
 
         # Edge case: transition with DSA action
         s_dsa = State(true, false, false, 3)
-        sp_dsa = rand(transition(pomdp, s_dsa, DSA))
+        sp_dsa = rand(rng, transition(pomdp, s_dsa, DSA))
         @test sp_dsa[4] == 4
     end
 
@@ -75,10 +76,10 @@ include("../src/functions.jl")
     @testset "Observation Model" begin
         s = State(true, false, false, 5)
         
-        obs_wait = rand(observation(pomdp, WAIT, s))
+        obs_wait = rand(rng, observation(pomdp, WAIT, s))
         @test typeof(obs_wait) == Vector{Int64}
         
-        obs_dsa = rand(observation(pomdp, DSA, s))
+        obs_dsa = rand(rng, observation(pomdp, DSA, s))
         @test typeof(obs_dsa) == Vector{Bool}
         
         # Test probabilities
@@ -95,13 +96,13 @@ include("../src/functions.jl")
 
         # Test edge cases
         s_all_true = State(true, true, true, 5)
-        obs_all_true = rand(observation(pomdp, DSA, s_all_true))
+        obs_all_true = rand(rng, observation(pomdp, DSA, s_all_true))
         @test obs_all_true[1] == true
         @test obs_all_true[2] == true
         @test obs_all_true[3] == true
 
         s_all_false = State(false, false, false, 5)
-        obs_all_false = rand(observation(pomdp, DSA, s_all_false))
+        obs_all_false = rand(rng, observation(pomdp, DSA, s_all_false))
         @test obs_all_false[1] == false
         @test obs_all_false[2] == false
         @test obs_all_false[3] == false
@@ -124,7 +125,6 @@ include("../src/functions.jl")
     @testset "Gen Function" begin
         s = State(false, false, false, 0)
         a = WAIT
-        rng = MersenneTwister(123)
         
         sp, o, r = gen(pomdp, s, a, rng)
         @test sp isa State
