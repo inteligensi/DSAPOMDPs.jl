@@ -1,5 +1,6 @@
 # DSAPOMDPs
 [![CI](https://github.com/mansurarief/DSAPOMDPs.jl/actions/workflows/CI.yml/badge.svg)](https://github.com/mansurarief/DSAPOMDPs.jl/actions/workflows/CI.yml)
+[![codecov](https://codecov.io/gh/mansurarief/DSAPOMDPs.jl/graph/badge.svg?token=x8p5PWwHSh)](https://codecov.io/gh/mansurarief/DSAPOMDPs.jl)
 
 This repo contains the code for the experiments of the paper ["Toward an Integrated Decision-Making Framework for Optimized Stroke Diagnosis with DSA and Treatment under Uncertainty" by Nur Ahmad Khatim, Azmul Asmar Irfan, Amaliya Mata'ul Hayah, and Mansur M. Arief](./paper/khatim2023_DSAPOMDP.pdf). 
 
