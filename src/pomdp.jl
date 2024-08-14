@@ -341,5 +341,7 @@ function POMDPs.stateindex(P::DSAPOMDP, s::State)
         return 5
     elseif a == REVC
         return 6
+    elseif a == DISC
+        return 7
     end
  end
