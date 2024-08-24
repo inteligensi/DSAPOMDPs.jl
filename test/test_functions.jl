@@ -63,23 +63,23 @@ include("../src/functions.jl")
         # Basic Valid Cases
         @test state_sub2ind((2, 2, 2, 25), 1, 1, 1, 1) == 1
         @test state_sub2ind((2, 2, 2, 25), 2, 2, 2, 25) == 200
-    
+
         # Edge Cases: Testing with boundary indices
         @test state_sub2ind((2, 2, 2, 25), 1, 1, 1, 25) == 193
         @test state_sub2ind((2, 2, 2, 25), 2, 2, 2, 1) == 8
         @test state_sub2ind((2, 2, 2, 25), 2, 2, 1, 1) == 4
         @test state_sub2ind((2, 2, 2, 25), 2, 1, 1, 1) == 2
-    
+
         # Edge Case: Invalid indices
         @test_throws BoundsError state_sub2ind((2, 2, 2, 25), 3, 1, 1, 1)
         @test_throws BoundsError state_sub2ind((2, 2, 2, 25), 1, 3, 1, 1)
         @test_throws BoundsError state_sub2ind((2, 2, 2, 25), 1, 1, 3, 1)
         @test_throws BoundsError state_sub2ind((2, 2, 2, 25), 1, 1, 1, 26)
-    
+
         # Edge Case: All indices at maximum
         @test state_sub2ind((2, 2, 2, 25), 2, 2, 2, 25) == 200
     end
-    
+
 
     @testset "evaluate_policies Function" begin
         # Setup
@@ -90,10 +90,10 @@ include("../src/functions.jl")
         s0 = State(false, false, false, 0)
         policies = [DSAPolicy(P=pomdp), HOSPPolicy(P=pomdp)]
         policy_names = ["DSAPolicy", "HOSPPolicy"]
-    
+
         # Test verbose output
         results_verbose = evaluate_policies(hr, pomdp, policies, up, b0, s0, verbose=true, save_to_file=false)
-    
+
         # Validate results
         @test length(results_verbose.rdiscs) == length(policies)
         @test length(results_verbose.durations) == length(policies)
@@ -105,10 +105,10 @@ include("../src/functions.jl")
         @test all(typeof(r) == Float64 for r in results_verbose.rdiscs)
         @test all(typeof(d) == Float64 for d in results_verbose.durations)
         @test all(typeof(it) == Bool for it in results_verbose.is_treateds)
-    
+
         # Test save_to_file option
         results_file = evaluate_policies(hr, pomdp, policies, up, b0, s0, verbose=false, save_to_file=true)
-    
+
         # Validate results
         @test length(results_file.rdiscs) == length(policies)
         @test length(results_file.durations) == length(policies)
@@ -120,13 +120,13 @@ include("../src/functions.jl")
         @test all(typeof(r) == Float64 for r in results_file.rdiscs)
         @test all(typeof(d) == Float64 for d in results_file.durations)
         @test all(typeof(it) == Bool for it in results_file.is_treateds)
-    
+
         # Check file output
         for (i, policy_name) in enumerate(policy_names)
             file_path = "output-$i.txt"
-            
+
             @test isfile(file_path)  # Check if the file is created
-            
+
             if isfile(file_path)
                 # Read file content and check
                 content = read(file_path, String)
@@ -138,23 +138,23 @@ include("../src/functions.jl")
                 @test contains(content, "rsum = ")
                 @test contains(content, "duration = ")
                 @test contains(content, "is_treated = ")
-                
+
                 rm(file_path)  # Clean up the file after test
             end
         end
-    
+
         # Edge Case: Empty Policies
         empty_results = evaluate_policies(hr, pomdp, [], up, b0, s0, verbose=false, save_to_file=false)
         @test length(empty_results.rdiscs) == 0
         @test length(empty_results.durations) == 0
         @test length(empty_results.is_treateds) == 0
-    
+
         # Edge Case: Single Policy
         single_policy_results = evaluate_policies(hr, pomdp, [DSAPolicy(P=pomdp)], up, b0, s0, verbose=false, save_to_file=false)
         @test length(single_policy_results.rdiscs) == 1
         @test length(single_policy_results.durations) == 1
         @test length(single_policy_results.is_treateds) == 1
-    
+
         # Edge Case: Large number of policies (stress test)
         large_policies = [DSAPolicy(P=pomdp) for _ in 1:100]
         large_results = evaluate_policies(hr, pomdp, large_policies, up, b0, s0, verbose=false, save_to_file=false)
@@ -163,7 +163,7 @@ include("../src/functions.jl")
         @test length(large_results.is_treateds) == 100
 
     end
-    
+
 
     @testset "summarize_rollout Function" begin
         pomdp = DSAPOMDP()
@@ -221,15 +221,40 @@ include("../src/functions.jl")
         up = BootstrapFilter(P, N, rng)
         b0 = initialize_belief(up)
         max_steps = 24
-    
+
         hr = HistoryRecorder(rng=rng, max_steps=max_steps)
         π_pomcp = solve(POMCPSolver(), P)
-    
+
         s0 = states(P)[76]
         hist = simulate(hr, P, π_pomcp, up, b0, s0)
-    
+
         # Test case 1: t = 0 (first conditional branch)
         plt = plot_belief_hist(hist, 0)
         @test !isnothing(plt)  # Check that a plot object is returned
+
+        # Test case 1: t = 1 (second conditional branch)
+        plt = plot_belief_hist(hist, 1)
+        @test !isnothing(plt)  # Check that a plot object is returned
+    end
+
+    # Test for pdf function with DSAObs
+    @testset "pdf with DSAObs" begin
+        dist = Distributions.ProductDistribution((DiscreteNonParametric([0, 1], [0.5, 0.5]), DiscreteNonParametric([0, 1], [0.5, 0.5])))
+        obs = DSAObs(pred_ane=true, pred_avm=false, pred_occ=true)
+        @test pdf(dist, obs) ≈ 0.0
+    end
+
+    # Test for pdf function with WHObs
+    @testset "pdf with WHObs" begin
+        dist = Distributions.ProductDistribution((DiscreteNonParametric([true, false], [0.5, 0.5]), DiscreteNonParametric([true, false], [0.5, 0.5]), DiscreteNonParametric([true, false], [0.5, 0.5])))
+        obs = WHObs(ct=CT_POS, siriraj=SIRIRAJ_GREATER1)
+        @test pdf(dist, obs) ≈ 0.0
+    end
+
+    # Test for pdf function with State
+    @testset "pdf with State" begin
+        dist = Distributions.ProductDistribution((DiscreteNonParametric([true, false], [0.5, 0.5]), DiscreteNonParametric([true, false], [0.5, 0.5]), DiscreteNonParametric([true, false], [0.5, 0.5]), DiscreteNonParametric(0:24, fill(1 / 25, 25))))
+        state = State(ane=true, avm=false, occ=true, time=12)
+        @test pdf(dist, state) ≈ 0.5 * 0.5 * 0.5 * (1 / 25)
     end
 end
