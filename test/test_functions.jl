@@ -231,5 +231,9 @@ include("../src/functions.jl")
         # Test case 1: t = 0 (first conditional branch)
         plt = plot_belief_hist(hist, 0)
         @test !isnothing(plt)  # Check that a plot object is returned
+
+        # Test case 1: t = 1 (second conditional branch)
+        plt = plot_belief_hist(hist, 1)
+        @test !isnothing(plt)  # Check that a plot object is returned
     end
 end

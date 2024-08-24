@@ -212,4 +212,20 @@ include("../src/functions.jl")
         @test POMDPs.obsindex(pomdp, DSAObs(false, false, true)) == 13
         @test POMDPs.obsindex(pomdp, DSAObs(false, false, false)) == 14
     end
+
+    @testset "Initial State Function" begin
+        # Get the deterministic initial state
+        initial_state_dist = initialstate(pomdp)
+        initial_state = rand(MersenneTwister(1), initial_state_dist)  # Sample from the deterministic distribution
+    
+        # Define the expected initial state
+        expected_state = State(ane=true, avm=false, occ=false, time=0)
+    
+        # Test that the sampled initial state matches the expected state
+        @test initial_state == expected_state
+    
+        # Test that the returned distribution is deterministic
+        @test typeof(initial_state_dist) == Deterministic{State}
+    end
+    
 end
