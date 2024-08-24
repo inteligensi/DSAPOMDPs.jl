@@ -59,12 +59,12 @@ include("../src/functions.jl")
         @test sp_dsa[4] == 4
 
         # Test terminal state coverage
-        s_terminal_action = State(false, false, false, 0)  # A non-terminal state for coverage
+        s_terminal_action = State(false, false, false, -99)
         # Ensure that terminal function is invoked, assuming isterminal function correctly identifies terminal states.
         is_terminal = isterminal(pomdp, s_terminal_action)
         if is_terminal
             sp_terminal_action = rand(rng, transition(pomdp, s_terminal_action, WAIT))
-            @test sp_terminal_action == Deterministic(s_terminal_action)
+            @test Deterministic(sp_terminal_action) == Deterministic(s_terminal_action)
         end
     end
 
